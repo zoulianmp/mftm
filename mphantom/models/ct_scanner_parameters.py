@@ -58,12 +58,15 @@ class CT_Scanner_Parameters(HasTraits):
     slice_thickness = Float(5) 
     
     dev_root = 'F:/PythonDir/mphantom/'
-    run_root =  os.getcwd()
+    run_root =  os.getcwd() + '/mphantom/'
+    
  
     dev_image_path = os.path.join(dev_root,'gui/images') 
     #the Coordinate for scanner
     
     run_image_path = os.path.join(run_root,'gui/images') 
+    
+    print "run_image_path:",run_image_path
    
     
     dev_scatter_path = os.path.join(dev_root,'config/scanner') 
