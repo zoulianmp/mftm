@@ -88,14 +88,19 @@ class StartUpVisualView(ActorsViewer):
         txtactor5.position = (-80,-250,10)
         
         txtactor6 = tvtk.TextActor3D()
-        txtactor6.input ="Sichuan Provincial People's Hospital" 
+        txtactor6.input ="Sichuan Provincial People's Hospital," 
         txtactor6.text_property = txtprop4
         txtactor6.position = (-80,-280,10)
+                
+        txtactor7 = tvtk.TextActor3D()
+        txtactor7.input ="Chengdu, China" 
+        txtactor7.text_property = txtprop4
+        txtactor7.position = (-80,-310,10)
         
         
         
         self.add_actors([txtactor1,txtactor11,txtactor2,txtactor3,
-                         txtactor4,txtactor5,txtactor6])
+                         txtactor4,txtactor5,txtactor6,txtactor7])
         
         
             
