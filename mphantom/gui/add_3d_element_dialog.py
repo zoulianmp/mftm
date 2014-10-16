@@ -126,6 +126,7 @@ class Add3DElementDialog(HasTraits):
                   
                   # buttons =ModalButtons,
                   buttons = OKCancelButtons,
+                  close_result  = False,
                   title = 'Adding 3D Element',
                   height= 650,
                   width = 550,

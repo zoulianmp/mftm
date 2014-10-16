@@ -71,6 +71,17 @@ class StartUpVisualView(ActorsViewer):
         txtactor3.text_property = txtprop3
         txtactor3.position = (80,-100,10)
         
+    
+        txtprop31 = tvtk.TextProperty()
+        txtprop31.font_size = 30
+      #  txtprop3.shadow = True
+        txtprop31.color = (1,0.7,0.5)
+        
+        txtactor31 = tvtk.TextActor3D()
+        txtactor31.input ="Email:  zoulian_medphy@sina.com " 
+        txtactor31.text_property = txtprop31
+        txtactor31.position = (-80,-330,10)
+        
        
         txtprop4 = tvtk.TextProperty()
         txtprop4.font_size = 25
@@ -80,26 +91,26 @@ class StartUpVisualView(ActorsViewer):
         txtactor4 = tvtk.TextActor3D()
         txtactor4.input ="Joint Lab for Medical Physics &" 
         txtactor4.text_property = txtprop4
-        txtactor4.position = (-80,-220,10)
+        txtactor4.position = (-80,-180,10)
         
         txtactor5 = tvtk.TextActor3D()
         txtactor5.input ="Department of Oncology," 
         txtactor5.text_property = txtprop4
-        txtactor5.position = (-80,-250,10)
+        txtactor5.position = (-80,-210,10)
         
         txtactor6 = tvtk.TextActor3D()
         txtactor6.input ="Sichuan Provincial People's Hospital," 
         txtactor6.text_property = txtprop4
-        txtactor6.position = (-80,-280,10)
+        txtactor6.position = (-80,-240,10)
                 
         txtactor7 = tvtk.TextActor3D()
         txtactor7.input ="Chengdu, China" 
         txtactor7.text_property = txtprop4
-        txtactor7.position = (-80,-310,10)
+        txtactor7.position = (-80,-270,10)
         
         
         
-        self.add_actors([txtactor1,txtactor11,txtactor2,txtactor3,
+        self.add_actors([txtactor1,txtactor11,txtactor2,txtactor3,txtactor31,
                          txtactor4,txtactor5,txtactor6,txtactor7])
         
         

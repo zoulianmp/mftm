@@ -23,7 +23,7 @@ from traitsui.api import View, Item, Spring, Group
 from base_element import BaseElement
 from three_dimension_element import ThreeDimensionElement
 
-from mphantom.api import PhantomUpdateHelper
+from mphantom.api import PhantomUpdateHelper,message_box
 from mphantom.api import  ConeGeometry, CubeGeometry, CylinderGeometry, \
                           SphereGeometry, STLFileGeometry, VTKFileGeometry
 
@@ -35,6 +35,8 @@ class MPhantom(HasTraits):
     A 3D Phantom Model Class for Phantom Construction and CTScanner Output
     '''
     name = Str('3DVirtualPhantom')
+    
+    elements_ids= List(Str)
     
     helper = PhantomUpdateHelper()
     
@@ -74,11 +76,26 @@ class MPhantom(HasTraits):
         
         
         
+    def element_name_exist(self,element) :
+          
+        if element.name in self.elements_ids:
+            message_box(message="The Element is Already Exist,Please Assign a New Name to New Element",
+                                   title="Failure of Elements' Name Check", severity='error')
+            return True
+        else :         
+            self.elements_ids.append(element.name)
+            return False
+            
+            
+            
+        
         
                 
     def add_3d_element(self,element):
         element.helper = self.helper
-        
+      
+        if self.element_name_exist(element): return      
+         
         self.three_dimension_elements.append(element)
         
         

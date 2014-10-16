@@ -50,8 +50,6 @@ class MPhantomApplication(WorkbenchApplication):
        # print "self.gui", self.gui.window
        # self.window.active_perspective = self.window.perspectives[0]
 
- 
-
 
 
     def _about_dialog_default(self):
@@ -66,7 +64,7 @@ class MPhantomApplication(WorkbenchApplication):
 
     def _splash_screen_default(self):
         """ Trait initializer. """
-
+        
         splash_screen = SplashScreen(
             image             = ImageResource('splash'),
             show_log_messages = True,

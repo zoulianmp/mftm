@@ -328,11 +328,8 @@ class Add3DElementAction(Action):
         currentphantom= data_server.model
         
         dialog =  Add3DElementDialog()
-        
-        ui = dialog.edit_traits()
-     
-       
-        
+        ui= dialog.edit_traits()
+   
         if ui.result:
             
              currentphantom.add_3d_element(dialog.ele)

@@ -51,11 +51,13 @@ class CT_Scanner_Parameters(HasTraits):
     #The Spacing  
     spacing_x = Float(0.850)
     spacing_y = Float(0.850)
-    spacing_z = Float(0.0)
     
+    slice_thickness = Float(5) #The spacing_z value
+    
+ 
     
     slice_num = Int()
-    slice_thickness = Float(5) 
+   
     
     dev_root = 'F:/PythonDir/mphantom/'
     run_root =  os.getcwd() + '/mphantom/'

@@ -272,12 +272,15 @@ class VolumeImageSliceViews(HasTraits):
     
     @on_trait_change('volume')
     def setup_init_views(self):
-        bounds = self.volume.bounds     
-        center =(((bounds[1] + bounds[0])/2.0),
-                 ((bounds[3] + bounds[2])/2.0),
-                 ((bounds[5] + bounds[4])/2.0))
+
         
-        self.default_position = [center[0],center[1],center[2]]
+        #Image is auto centered in (0,0,0)
+        
+        center =(0,0,0)
+                
+        self.default_position = [center[0],
+                                 center[1],
+                                 center[2]]
                  
         self.axial.deep_copy((-1, 0, 0, center[0],
                               0, 1, 0, center[1],
@@ -568,7 +571,7 @@ class VolumeImageSliceViews(HasTraits):
     
     
     def  MouseWheelCallback(self,obj, event):
-        print event
+     
         delta = 0
         if event == "MouseWheelForwardEvent":
             delta = 1
@@ -578,14 +581,14 @@ class VolumeImageSliceViews(HasTraits):
             
         spacing = self.volume.spacing
        
-        print delta
+       
         
         if self.current_view_id == 0 :
             self.current_matrix = self.axial    
             sliceSpacing = spacing[2]
             viewer = self.view_translate
             
-        elif self.current_view_id == 1 :
+        elif self.current_view_id == 1 : 
             self.current_matrix = self.coronal  
             sliceSpacing = spacing[1]
             viewer = self.view_coronal
@@ -602,14 +605,14 @@ class VolumeImageSliceViews(HasTraits):
         
             
         # move the center point that we are slicing through
-        deta_slice =  sliceSpacing*delta 
+        deta_slice =  sliceSpacing*delta
      
       
         new_position = self.current_matrix.multiply_point((0, 0, deta_slice, 1))
         
-        self.current_matrix.set_element(0, 3, new_position[0])
-        self.current_matrix.set_element(1, 3, new_position[1])
-        self.current_matrix.set_element(2, 3, new_position[2])
+        self.current_matrix.set_element(0, 3, round(new_position[0],2))
+        self.current_matrix.set_element(1, 3, round(new_position[1],2))
+        self.current_matrix.set_element(2, 3, round(new_position[2],2))
         
     
         pre_actor_list = viewer.actor_list

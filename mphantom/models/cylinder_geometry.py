@@ -97,8 +97,7 @@ class CylinderGeometry(BaseGeometry):
         
         self.source.update()
         
-        print self.actor
-          
+     
     
     def _resolution_changed(self, value):
         

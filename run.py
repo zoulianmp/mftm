@@ -42,16 +42,17 @@ def main(argv):
                 WorkbenchPlugin(), 
      
                 DataServerPlugin(),
-                MPhantomUIPlugin(), 
+                MPhantomUIPlugin(), ]
                     
-                  DeveloperPlugin(),
-                DeveloperUIPlugin()]
+              #    DeveloperPlugin(),
+               # DeveloperUIPlugin()]
   
   
     app = MPhantomApplication(plugins=plugins)
     
 
     app.run()
+  
 
     logging.shutdown()
 

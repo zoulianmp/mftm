@@ -184,6 +184,7 @@ class Virtual_CT_Scanner(HasTraits):
 #           self.spacing_y = fixed_size[1] / self.slice_size[1]
             
            spacing_z = params.slice_thickness
+           
          
           # self.slice_num  = int(ceil((bounds[5] - bounds[4])/self.spacing_z))+1
            params.slice_num  = int(ceil((bounds[5] - bounds[4])/spacing_z))
@@ -193,7 +194,7 @@ class Virtual_CT_Scanner(HasTraits):
            params.center_z = (bounds[5] + bounds[4])/2.0
                
            
-           spacing = ( params.spacing_x, params.spacing_y, params.spacing_z)
+           spacing = ( params.spacing_x, params.spacing_y, spacing_z)
            
            print "Spacing = ",spacing
            
