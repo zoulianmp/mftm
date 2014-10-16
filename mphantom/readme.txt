@@ -1,2 +1,0 @@
-该文件夹是对MPhantom文件夹的重新构造和，重新设计。
-实现的功能都是MagicalPhantom的功能。为mphantom向4D,Deformable等增强，做好准备。

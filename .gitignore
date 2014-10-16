@@ -1,0 +1,2 @@
+*.pyc
+/mphantom/models/dicom_output

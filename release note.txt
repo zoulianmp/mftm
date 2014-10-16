@@ -1,0 +1,12 @@
+﻿该文件夹是对MPhantom文件夹的重新构造和，重新设计。
+实现的功能都是MagicalPhantom的功能。为mphantom向4D,Deformable等增强，做好准备。
+
+
+#*********************************************************************************************
+Version 2.0 released date: 2014.10.16
+* reconstructe the workspace layout
+* Added phantom save,rename,load function.
+* Added the WindowLevel tuning function in the virtual CT Scanning workspace. So,users can see the details of images.
+
+
+
