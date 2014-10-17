@@ -258,10 +258,11 @@ class Virtual_CT_Scanner(HasTraits):
            
             if self.phantom.phantom_type =='3DPhantom':
                 
-                self._3d_phantom_scanning()
-                
+                self._3d_phantom_scanning()                
                 self.ready_for_view = True
        
+       
+                self.image_exporter.image_sets = self.raw_data 
                 self.ready_for_export = True
 
 

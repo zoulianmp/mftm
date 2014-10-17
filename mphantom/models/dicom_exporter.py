@@ -98,7 +98,7 @@ class DicomExporter(HasTraits):
         
         import os
         dev_root = 'F:/PythonDir/DicomSolution/mphantom/'
-        run_root =  os.getcwd()
+        run_root =  os.getcwd() + '/mphantom/models/'
  
         dev_path = os.path.join(dev_root,'images/DicomCTTemplate.dcm') 
         run_path = os.path.join(run_root,'./images/DicomCTTemplate.dcm') 
@@ -487,6 +487,7 @@ class DicomExporter(HasTraits):
  
         elif len(self.image_sets) > 1:
             #Do multiple image sets export
+            print "in the multiple image sets export"
             pass
             
 
