@@ -52,10 +52,11 @@ class Virtual_CT_Scanner(HasTraits):
     start_scan_button = Button(label = 'Start Scan')
     
     
-   
+    has_cached_raw_data = Bool(False)
     
     
     ready_for_view = Event()
+    
     reset_viewers = Event() #Event for reset the slice viewers
     
     ready_for_export = Bool(False)
@@ -79,8 +80,9 @@ class Virtual_CT_Scanner(HasTraits):
         self.scanning_paras = CT_Scanner_Parameters()
         self.image_exporter = ImageSetExporter()
         self.raw_data =[]
-   
- 
+        
+       
+
 
     #Check the elements of Phantom for virtual Scan  ,
     #Pass the Check return True
@@ -258,8 +260,13 @@ class Virtual_CT_Scanner(HasTraits):
            
             if self.phantom.phantom_type =='3DPhantom':
                 
-                self._3d_phantom_scanning()                
+                self._3d_phantom_scanning()    
+                
                 self.ready_for_view = True
+                
+                print "Fire the ready_for_view EVENT"
+                
+                self.has_cached_raw_data = True
        
        
                 self.image_exporter.image_sets = self.raw_data 
@@ -275,7 +282,8 @@ class Virtual_CT_Scanner(HasTraits):
         
             else:
                 pass
-            self._3d_phantom_scanning()
+            
+            #self._3d_phantom_scanning()
             
         else:
             print "Cancle the scan action"

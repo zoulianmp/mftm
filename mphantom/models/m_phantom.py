@@ -105,6 +105,9 @@ class MPhantom(HasTraits):
         
     
     def remove_3d_element(self,element):
+        
+        self.elements_ids.remove(element.name)
+        
         self.three_dimension_elements.remove(element)
         
       
@@ -309,7 +312,9 @@ class MPhantom(HasTraits):
             element = self.parse_3d_element(jsonele)
             element.helper = self.helper
              
-            self.three_dimension_elements.append(element) 
+            self.add_3d_element(element)  #Add three-d elements and element names
+            
+            #self.three_dimension_elements.append(element) 
         
       
         self.set_current_element_by_Index(data["CurrentElementIndex"])

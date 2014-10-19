@@ -13,15 +13,22 @@ Created on Wed Oct 26 10:52:41 2011
 from envisage.api import Plugin, ServiceOffer
 from traits.api import List, Str
 
-from traits.api import HasTraits, List
+from traits.api import HasTraits, List, Instance
 
-from mphantom.api import MPhantom
+from mphantom.api import MPhantom, Virtual_CT_Scanner
 from tvtk.api import tvtk
 
 
-class DataServer (HasTraits):
-    model = MPhantom()   
-    raw_data = List(tvtk.ImageData())
+class RunManager (HasTraits):
+    
+    model = Instance(MPhantom)  
+    
+    scanner = Instance(Virtual_CT_Scanner)
+    
+    #The old Design, for mphantom    
+    #raw_data = List(tvtk.ImageData())
+    
+     
 
     dev_root = Str()
     run_root = Str()
@@ -30,12 +37,19 @@ class DataServer (HasTraits):
     
     run_image_path = Str()
     
-    
+     
        
        
     def __init__(self,**traits):       
-        super(DataServer,self).__init__(**traits)
+        super(RunManager,self).__init__(**traits)
       
+              
+        self.model = MPhantom()       
+        self.scanner =  Virtual_CT_Scanner()
+        
+        self.scanner.phantom =self.model
+        
+        
         import os
 
         self.dev_root = 'F:/PythonDir/DicomSolution/mphantom/gui'
@@ -45,12 +59,23 @@ class DataServer (HasTraits):
         #the Coordinate for scanner
         
         self.run_image_path = os.path.join(self.run_root,'images') 
+        
+        self.model.on_trait_event(self.initial_raw_data,'updated')
        
     
+    def initial_raw_data(self):
+        
+       
+        if self.scanner.has_cached_raw_data: 
+            print "Initial the raw_data: because of the phantom modified"
+            self.scanner.raw_data =[]
+            
+            self.scanner.reset_viewers = True
+            self.scanner.ready_for_export = False
+            
 
 
-
-class DataServerPlugin(Plugin):
+class RunManagerPlugin(Plugin):
 
     #### Contributions to extension points made by this plugin ################
     """
@@ -79,8 +104,8 @@ class DataServerPlugin(Plugin):
         """ Trait initializer. """
 
         data_service_offer = ServiceOffer(
-             protocol = 'mphantom.api.DataServer',
-             factory  = 'mphantom.api.DataServer'
+             protocol = 'mphantom.api.RunManager',
+             factory  = 'mphantom.api.RunManager'
         )
 
         return [data_service_offer]
@@ -92,10 +117,10 @@ class DataServerPlugin(Plugin):
 ####################################
 
 if __name__ == '__main__':
-    dataserver = DataServer()
+    RunManager = RunManager()
     
-    print dataserver.model
+    print RunManager.model
     
-    print dataserver.raw_data
+    print RunManager.raw_data
 
 

@@ -470,6 +470,8 @@ class DicomExporter(HasTraits):
         dicoms_out_dir = self.export_property.output_dir+ '/' + self.export_property.export_style
         
         ensure_dir(dicoms_out_dir)
+        
+        self.image_style = 'template'
     
         if self.image_style == 'template':
             self.slice_dataset = self.slice_template

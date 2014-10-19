@@ -26,11 +26,11 @@ from mphantom.api import MPhantom, VolumeImageSliceViews,Virtual_CT_Scanner
 class VirtualScannningGUI(HasTraits):
 
     
-    scanner = Instance(Virtual_CT_Scanner,()) 
+    scanner = Instance(Virtual_CT_Scanner) 
     
     
-    phantom  = DelegatesTo('scanner')    
-    raw_data =  DelegatesTo('scanner')
+   # phantom  = DelegatesTo('scanner')    
+   # raw_data =  DelegatesTo('scanner')
 
     image_viewer = Instance(VolumeImageSliceViews)
     
@@ -43,9 +43,7 @@ class VirtualScannningGUI(HasTraits):
     def __init__(self,**traits):
         super(VirtualScannningGUI, self).__init__(**traits)
         
-        if self.scanner is None :
-            self.scanner = Virtual_CT_Scanner()
-         
+       
         if self.image_viewer is None:
             self.image_viewer = VolumeImageSliceViews()
         
@@ -59,7 +57,8 @@ class VirtualScannningGUI(HasTraits):
         if self.image_viewer is None:
             self.image_viewer = VolumeImageSliceViews()
    
-        self.image_viewer.volume = self.raw_data[0]
+        print "Feed RawData to viewer"
+        self.image_viewer.volume = self.scanner.raw_data[0]
         
             
 

@@ -83,7 +83,7 @@ from gui.mphantom_application import MPhantomApplication
 #Plugins import 
 #*******************************************************
 
-from gui.data_server_plugin import DataServerPlugin, DataServer
+from gui.run_manager_plugin import RunManagerPlugin, RunManager
 from gui.mphantom_ui_plugin import MPhantomUIPlugin
 
 

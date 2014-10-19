@@ -8,7 +8,7 @@ from pyface.workbench.api import TraitsUIView
 from traits.api import List
 
 #Local Import 
-from mphantom.api import DataServer, Virtual_CT_Scanner
+from mphantom.api import RunManager, Virtual_CT_Scanner
 
 from mphantom.api import StartUpVisualView,VirtualScannningGUI, PhantomFactoryGUI
                         
@@ -142,11 +142,11 @@ class MPhantomUIPlugin(Plugin):
     def _creat_phantom_factory_view(self, **traits):
         
        
-        data_server = self.application.get_service('mphantom.api.DataServer')
+        run_manager = self.application.get_service('mphantom.api.RunManager')
         
-        print data_server         
+        print run_manager         
         
-        phantom = data_server.model
+        phantom = run_manager.model
         
         
         factory_view = TraitsUIView(
@@ -163,14 +163,13 @@ class MPhantomUIPlugin(Plugin):
     def _creat_virutal_scanning_view(self, **traits):
          
           
-        data_server = self.application.get_service('mphantom.api.DataServer')
+        run_manager = self.application.get_service('mphantom.api.RunManager')
         
-             
-        scanning_gui = VirtualScannningGUI()
-        
-        scanning_gui.phantom = data_server.model
-        
-        scanning_gui.raw_data = data_server.raw_data
+          
+        #Initialize the scanning gui for bind the RunManager's Scanner,phantom,rawdata  
+        scanning_gui = VirtualScannningGUI(scanner =  run_manager.scanner )                                                                              
+                                        
+    
         
             
         virtul_scanner_view = TraitsUIView(

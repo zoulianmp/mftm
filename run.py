@@ -23,7 +23,7 @@ from envisage.developer.developer_plugin import DeveloperPlugin
 from envisage.developer.ui.developer_ui_plugin import DeveloperUIPlugin
 
 # Local imports.
-from mphantom.api import MPhantomApplication, DataServerPlugin, \
+from mphantom.api import MPhantomApplication, RunManagerPlugin, \
                          MPhantomUIPlugin
                            
 
@@ -41,7 +41,7 @@ def main(argv):
     plugins = [ CorePlugin(), 
                 WorkbenchPlugin(), 
      
-                DataServerPlugin(),
+                RunManagerPlugin(),
                 MPhantomUIPlugin(), ]
                     
               #    DeveloperPlugin(),

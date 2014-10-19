@@ -22,7 +22,7 @@ from pyface.api import FileDialog, OK
 
 from mphantom.api import MPhantom
 
-from mphantom.api import DataServer, Add3DElementDialog,ThreeDimensionElement, \
+from mphantom.api import RunManager, Add3DElementDialog,ThreeDimensionElement, \
                          ImageSetExporter, TestDialog
 
 #from models.compound_element import CompoundElement
@@ -181,8 +181,8 @@ class NewPhantomAction(Action):
          
         if ui.result:
               
-          data_server = self.window.application.get_service('mphantom.api.DataServer')
-          phantom = data_server.model
+          run_manager = self.window.application.get_service('mphantom.api.RunManager')
+          phantom = run_manager.model
           phantom.name = p.name
           self.window.active_perspective = self.window.perspectives[1]
                        
@@ -218,9 +218,9 @@ class LoadPhantomAction(Action):
                 error("File '%s' does not exist"%dialog.path,parent)
                 return
        
-        data_server = self.window.application.get_service('mphantom.api.DataServer')
+        run_manager = self.window.application.get_service('mphantom.api.RunManager')
         
-        phantom = data_server.model
+        phantom = run_manager.model
         
        
         
@@ -255,8 +255,8 @@ class SavePhantomAction(Action):
                             action = 'save as',wildcard = wildcard)
         if dialog.open()==OK:
              
-            data_server = self.window.application.get_service('mphantom.api.DataServer')
-            currentphantom= data_server.model
+            run_manager = self.window.application.get_service('mphantom.api.RunManager')
+            currentphantom= run_manager.model
  
             currentphantom.save_phantom(dialog.path)
         
@@ -287,8 +287,8 @@ class RenamePhantomAction(Action):
         ui = p.edit_traits()
          
         if ui.result:
-          data_server = self.window.application.get_service('mphantom.api.DataServer')
-          phantom = data_server.model
+          run_manager = self.window.application.get_service('mphantom.api.RunManager')
+          phantom = run_manager.model
           
           phantom.name = p.name
           
@@ -323,9 +323,9 @@ class Add3DElementAction(Action):
     #####################################################
     def perform(self,event):
         """Perform the Add a Single Element  Action """
-        data_server = self.window.application.get_service('mphantom.api.DataServer')
+        run_manager = self.window.application.get_service('mphantom.api.RunManager')
         
-        currentphantom= data_server.model
+        currentphantom= run_manager.model
         
         dialog =  Add3DElementDialog()
         ui= dialog.edit_traits()
@@ -366,8 +366,8 @@ class DeletCurrentElementAction(Action):
     #####################################################
     def perform(self,event):
         """Perform the Add a Single Element  Action """
-        data_server = self.window.application.get_service('mphantom.api.DataServer')
-        currentphantom= data_server.model
+        run_manager = self.window.application.get_service('mphantom.api.RunManager')
+        currentphantom= run_manager.model
    
       
         celement = currentphantom.current_element
