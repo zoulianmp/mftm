@@ -53,6 +53,8 @@ from models.m_phantom import MPhantom
 
 
 from models.image_set_exporter import ImageSetExporter
+from models.image_export_property import ImageExportProperty
+from models.image_set_info import ImageSetInfo
 
 from models.virtual_ct_scanner import Virtual_CT_Scanner
 

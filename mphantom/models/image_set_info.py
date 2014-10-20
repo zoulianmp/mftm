@@ -9,11 +9,14 @@ Created on Mon Oct 31 15:08:10 2011
 """
 
 
+import datetime
+
+
 
 # Enthought library imports.
 
 from traits.api import HasTraits,Str,Instance, Int, Enum, Float,List, \
-                       Directory, on_trait_change,String
+                       Directory, on_trait_change,String, Date, Time
  
 from traitsui.api import Item, View, Spring, VGroup,VGrid,HGroup
 
@@ -43,9 +46,19 @@ class ImageSetInfo(HasTraits):
     #patient valuesimage_spacing_x
     patient_id = Str('123456')
     patient_name = Str('Magical Phantom')
-    patient_age = Int()
-    patient_sex =  Enum('Male','Female','Other')
-     
+    
+    
+    patient_birth_date = Date(datetime.datetime.today() )
+    patient_birth_time = Time(datetime.datetime.now() )
+       
+    
+    
+    patient_sex =  Enum('Male','Female','Other')    
+    patient_sex_map = {'Male':'M','Female':'F','Other':'O'}
+    
+    
+    
+    
     
     #image set related values
     short_study_id = String('001',minlen=3,maxlen=3)    
@@ -84,8 +97,13 @@ class ImageSetInfo(HasTraits):
     def update_dataset(self,data_set):
         data_set.PatientID = self.patient_id 
         data_set.PatientsName = self.patient_name
-        data_set.PatientsBirthDate =str(self.year - self.patient_age)
-        data_set.PatientsSex = self.patient_sex
+        
+        data_set.PatientsBirthDate = self.patient_birth_date.strftime("%Y%m%d") 
+        data_set.PatientBirthTime = self.patient_birth_time.strftime("%H%M%S.%f")
+        
+        
+        
+        data_set.PatientsSex = self.patient_sex_map[self.patient_sex]
      
         
         data_set.InstanceNumber = self.image_number
@@ -126,15 +144,19 @@ class ImageSetInfo(HasTraits):
         """initial the date and time related variables for further application.
         """
         
-        from datetime import datetime
     
-        tim = datetime.now()
+        tim = datetime.datetime.now()
         
         self.date = tim.strftime("%Y%m%d")
         self.time = tim.strftime("%H%M%S")
         self.year = tim.year
         self.time_stamp_str =  tim.strftime("%Y%m%d.%H%M%S")
     
+    
+    def print_image_set_info(self):
+        print "This is the image set info:"
+        print "patient_id = ", self.patient_id
+        print "patient_name = ", self.patient_name
     
 
      
@@ -153,8 +175,12 @@ class ImageSetInfo(HasTraits):
                                 label = 'Patient Name'),
                            Spring(),
                            
-                           Item(name ='patient_age',
-                                label = 'Patient Age'),
+                           Item(name ='patient_birth_date',
+                                label = 'Patient BirthDate'),
+                           Spring(),           
+                           Item(name ='patient_birth_time',
+                                label = 'Patient BirthTime'),
+                                
                            Spring(),
 
                            Item(name ='patient_sex',
@@ -195,5 +221,6 @@ if __name__ == '__main__':
     
    
    imageinfo = ImageSetInfo()
-   
+   print  imageinfo.patient_birth_time
+   print  imageinfo.patient_birth_time.strftime("%H%M%S.%f")
    imageinfo.configure_traits()

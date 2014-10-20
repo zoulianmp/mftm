@@ -54,7 +54,28 @@ class SphereGeometry(BaseGeometry):
         mapper = tvtk.PolyDataMapper(input=self.init_poly)
         self.current_actor = tvtk.Actor(mapper=mapper)
         
-    
+    def _radius_changed(self, value):
+        if self.source is not None:
+            self.source.radius = value
+            
+            self.source.update() 
+            
+          
+    def _center_x_changed(self, value):
+        if self.source is not None:
+            self.source.center = (self.center_x, self.center_y, self.center_z)    
+            self.source.update() 
+                   
+    def _center_y_changed(self, value):
+        if self.source is not None:
+            self.source.center = (self.center_x, self.center_y, self.center_z)    
+            self.source.update() 
+                   
+    def _center_z_changed(self, value):
+        if self.source is not None:
+            self.source.center = (self.center_x, self.center_y, self.center_z)    
+            self.source.update() 
+                                  
 
     def get_data_for_json(self):
         '''Get a dict data for json output '''

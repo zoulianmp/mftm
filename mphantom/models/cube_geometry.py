@@ -60,58 +60,55 @@ class CubeGeometry(BaseGeometry):
     def _center_x_changed(self, value):
         
        # print self.source.angle
-        
-        self.source.center = (self.center_x,self.center_y,self.center_z)
-        
-        self.source.update()
+        if self.source is not None:
+            
+            self.source.center = (self.center_x,self.center_y,self.center_z)
+            
+            self.source.update()
         
     def _center_y_changed(self, value):
         
        # print self.source.angle
-        
-        self.source.center = (self.center_x,self.center_y,self.center_z)
-        
-        self.source.update()
-        
+        if self.source is not None:
+            self.source.center = (self.center_x,self.center_y,self.center_z)
+            
+            self.source.update()
+            
         
     def _center_z_changed(self, value):
         
        # print self.source.angle
-        
-        self.source.center = (self.center_x,self.center_y,self.center_z)
-        
-        self.source.update()
-        
+        if self.source is not None:
+            self.source.center = (self.center_x,self.center_y,self.center_z)
+            
+            self.source.update()
+            
         
         
     def _length_x_changed(self, value):
         
-        
-        self.source.x_length = self.length_x 
-        
-      
-        self.source.update()
+        if self.source is not None:
+            self.source.x_length = self.length_x 
+            
+          
+            self.source.update()
         
     def _length_y_changed(self, value):
         
        # print self.source.angle
+        if self.source is not None:
         
-        self.source.y_length = self.length_y
+            self.source.y_length = self.length_y
+            
+            print "length y:" ,self.source.y_length
+             
+            self.source.update()
         
-        print "length y:" ,self.source.y_length
-         
-        self.source.update()
-        
-    def _length_z_changed(self, value):
-        
+    def _length_z_changed(self, value):   
     
-        
-        self.source.z_length = self.length_z
-        
-        
-       
-        
-        self.source.update()
+        if self.source is not None:
+            self.source.z_length = self.length_z
+            self.source.update()
         
     def get_data_for_json(self):
         '''Get a dict data for json output '''

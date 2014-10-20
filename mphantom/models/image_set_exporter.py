@@ -80,17 +80,17 @@ class ImageSetExporter(HasTraits):
     #********************************************************************
     #Do Export Job 
     def do_export_job(self):
-        if self.export_property.export_style == 'DicomCT-GeneralUse' :
+        if self.export_property.export_style == 'Dicom CTImage' :
             self.do_dicom_export()
             
-        elif self.export_property.export_style == 'DicomCT-Xio 4.3.1' :
-            self.do_dicom_export()
-        
-        elif self.export_property.export_style ==  'DicomCT-Xio 4.6.4' :
-            self.do_dicom_export()
-        
-        elif  self.export_property.export_style == 'GEANT4 Geometry' :
-            pass
+#        elif self.export_property.export_style == 'DicomCT-Xio 4.3.1' :
+#            self.do_dicom_export()
+#        
+#        elif self.export_property.export_style ==  'DicomCT-Xio 4.6.4' :
+#            self.do_dicom_export()
+#        
+#        elif  self.export_property.export_style == 'GEANT4 Geometry' :
+#            pass
           
 
 

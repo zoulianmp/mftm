@@ -144,7 +144,9 @@ class DicomExporter(HasTraits):
     def update_uid_root(self):
         self.uid_root =  pydicom_root_UID + self.image_set_info.time_stamp_str 
         
+        print "image_set_info chaged, call the invoke function! in the  def update_uid_root(self): "
         
+        self.image_set_info.print_image_set_info()
     
 
 #*******************************************************
@@ -156,15 +158,15 @@ class DicomExporter(HasTraits):
             self.file_name_prefix = Str('Vscan.CT.')
             self.file_name_suffix = Str('phantom.dcm')
             
-        elif self.export_style == 'Xio 4.3.1' or self.export_style =='Xio 4.6.4':
-           
-            Tname =string.join(string.split(self.patient_name),sep="_") 
-            self.file_name_suffix = Tname
-              
-             
-            full_study_id = '0108' + self.date + '000'+ self.short_study_id
-            self.file_name_prefix = "CTI."+ self.patient_id +'.' + full_study_id +"."
-    
+#        elif self.export_style == 'Xio 4.3.1' or self.export_style =='Xio 4.6.4':
+#           
+#            Tname =string.join(string.split(self.patient_name),sep="_") 
+#            self.file_name_suffix = Tname
+#              
+#             
+#            full_study_id = '0108' + self.date + '000'+ self.short_study_id
+#            self.file_name_prefix = "CTI."+ self.patient_id +'.' + full_study_id +"."
+#    
     
     
     #********************************************************************
@@ -444,24 +446,22 @@ class DicomExporter(HasTraits):
    
        
                
-                if out_version == 'DicomCT-Xio 4.3.1':
+                if out_version == 'Dicom CTImage':
                     
                     fds = FileDataset(out_file_name, slice_dataset) 
                     fds.save_as(out_file_name)
-                    
-                elif out_version == 'DicomCT-GeneralUse':
-               
+             
                      # Create the FileDataset instance (initially no data elements, but file_meta supplied)
                    
                     fds = FileDataset(out_file_name, slice_dataset,file_meta=self.file_meta_data, preamble="\0"*128) 
                     fds.save_as(out_file_name)
                     
-                elif out_version == 'DicomCT-Xio 4.6.4':
-                  
-                    fds = FileDataset(out_file_name,slice_dataset, file_meta=self.file_meta_data)  
-                    fds.save_as(out_file_name)
-           
-       
+#                elif out_version == 'DicomCT-Xio 4.6.4':
+#                  
+#                    fds = FileDataset(out_file_name,slice_dataset, file_meta=self.file_meta_data)  
+#                    fds.save_as(out_file_name)
+#           
+#       
     
        
     def do_job(self):
@@ -471,7 +471,7 @@ class DicomExporter(HasTraits):
         
         ensure_dir(dicoms_out_dir)
         
-        self.image_style = 'template'
+        #self.image_style = 'template'
     
         if self.image_style == 'template':
             self.slice_dataset = self.slice_template
@@ -485,8 +485,8 @@ class DicomExporter(HasTraits):
             self.image_3d = self.image_sets[0]
             self.gen_dicom_files(dicoms_out_dir,self.image_3d,self.image_set_info,self.slice_dataset)
         
-       
- 
+            print "**********Dicom CT Exported Successfully*****************************/n"
+  
         elif len(self.image_sets) > 1:
             #Do multiple image sets export
             print "in the multiple image sets export"
@@ -497,80 +497,6 @@ class DicomExporter(HasTraits):
 
 
 
-
-    #***************************************************************************
-    #
-     
-    space = VGroup(
-                   Spring(),
-                   Spring(),
-                   Spring(),
-                   Spring()
-                  )
-                  
-    patient_group = VGrid(
-                           Item(name ='patient_id',
-                                label = 'Patient ID'),
-                           Spring(),
-                           Item(name ='patient_name',
-                                label = 'Patient Name'),
-                           Spring(),
-                           
-                           Item(name ='patient_age',
-                                label = 'Patient Age'),
-                           Spring(),
-
-                           Item(name ='patient_sex',
-                                label = 'Patient Sex'),
-                           Spring(),
-                           
-                           label = 'Patient Properties', 
-                           show_border = True,    
-                          )
-    image_set_group = VGrid(
-                          
-                           Item(name = 'short_study_id',
-                                label = 'Study ID'),
-                           Spring(),
-                           Item(name='study_comment',
-                                label = 'Study Comment'),
-                           Spring(),
-                               
-                           label = 'Image Set Properties', 
-                           show_border = True,    
-                           )
-                           
-    io_group = VGroup(
-                     HGroup(Item(name = 'export_style',
-                            label = 'Export Styles'),
-                            Spring()),
-                     
-                     Item(name = 'dicoms_out_dir',
-                          label = 'Output Directory'),
-                    
-
-                     label = 'Dicom Image IO Properties', 
-                     show_border = True,    
-    
-                    )
- 
-    view = View(
-               VGroup(
-                      space,
-                      patient_group,
-                      space,
-                      image_set_group,
-                      space,
-                      io_group
-                     ),
-                     
-               
-                title = 'Dicom CT Image Exporter',
-                height= 500,
-                width = 400,
-                kind = 'livemodal',
-                buttons = [OKButton,CancelButton]
-                )
  
 ####################################
 

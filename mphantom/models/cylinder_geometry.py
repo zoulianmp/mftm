@@ -61,51 +61,52 @@ class CylinderGeometry(BaseGeometry):
     def _center_x_changed(self, value):
         
        # print self.source.angle
-        
-        self.source.center = (self.center_x,self.center_y,self.center_z)
-        
-        self.source.update()
-        
+        if self.source is not None:
+            self.source.center = (self.center_x,self.center_y,self.center_z)
+            
+            self.source.update()
+            
     def _center_y_changed(self, value):
         
        # print self.source.angle
-        
-        self.source.center = (self.center_x,self.center_y,self.center_z)
-        
-        self.source.update()
-        
+        if self.source is not None:
+            self.source.center = (self.center_x,self.center_y,self.center_z)
+            
+            self.source.update()
+            
         
     def _center_z_changed(self, value):
         
        # print self.source.angle
-        
-        self.source.center = (self.center_x,self.center_y,self.center_z)
-        
-        self.source.update()
-        
+        if self.source is not None:
+            self.source.center = (self.center_x,self.center_y,self.center_z)
+            
+            self.source.update()
+            
     def _height_changed(self, value):
         
-        self.source.height = value
-        
-        self.source.update()
-        
+        if self.source is not None:
+            self.source.height = value
+            
+            self.source.update()
+            
         
         
     def _radius_changed(self, value):
-        
-        self.source.radius = value
-        
-        self.source.update()
-        
+        if self.source is not None:
+            self.source.radius = value
+            
+            self.source.update()
+            
      
     
     def _resolution_changed(self, value):
-        
-        self.source.resolution = value
-        
-        self.source.update()
+        if self.source is not None:
+            self.source.resolution = value
             
-        
+            self.source.update()
+                
+            
 
 
 
