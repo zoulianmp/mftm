@@ -70,6 +70,8 @@ class MPhantom(HasTraits):
         self.updated = True
         
     def clear_phantom(self):
+        
+        self.elements_ids = []
         self.three_dimension_elements = []
         self.four_dimension_elements = []
         self.current_element = None

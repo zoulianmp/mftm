@@ -226,6 +226,7 @@ class LoadPhantomAction(Action):
         
         print dialog.path
                 
+        phantom.clear_phantom()
         phantom.load_phantom(dialog.path)
         
        
