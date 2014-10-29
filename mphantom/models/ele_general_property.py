@@ -48,6 +48,7 @@ class EleGeneralProperty(HasTraits):
     
     # Predefined Color for material.
     
+   #  color = Instance(Tuple(0,0,0))
     color = Tuple(colors.black)
     
     #Priority of the Element 
@@ -154,9 +155,9 @@ class EleGeneralProperty(HasTraits):
         self.re_e_density = self.m_edensity_dict[value]
         
         
-        self.color =self.material_color_dict[self.tissue_type]
+        self.color = self.material_color_dict[self.tissue_type]
         
-        gener_vis_props_changed = True
+        self.gener_vis_props_changed = True
         
        # print self.re_e_density, self.color 
                    

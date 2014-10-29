@@ -78,9 +78,24 @@ class StartUpVisualView(ActorsViewer):
         txtprop31.color = (1,0.7,0.5)
         
         txtactor31 = tvtk.TextActor3D()
-        txtactor31.input ="Email:  zoulian_medphy@sina.com " 
+        txtactor31.input ="Email:   zoulian_medphy@sina.com " 
         txtactor31.text_property = txtprop31
         txtactor31.position = (-80,-330,10)
+        
+        txtprop32 = tvtk.TextProperty()
+        txtprop32.font_size = 30
+      #  txtprop3.shadow = True
+        txtprop32.color = (1,0.7,0.5)
+        
+        txtactor32 = tvtk.TextActor3D()
+        txtactor32.input ="             zoulianmedphy@gmail.com" 
+        txtactor32.text_property = txtprop31
+        txtactor32.position = (-80,-370,10)
+        
+        
+        
+        
+        
         
        
         txtprop4 = tvtk.TextProperty()
@@ -111,7 +126,7 @@ class StartUpVisualView(ActorsViewer):
         
         
         self.add_actors([txtactor1,txtactor11,txtactor2,txtactor3,txtactor31,
-                         txtactor4,txtactor5,txtactor6,txtactor7])
+                         txtactor32,txtactor4,txtactor5,txtactor6,txtactor7])
         
         
             

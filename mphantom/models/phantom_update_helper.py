@@ -18,4 +18,6 @@ from traits.api import HasTraits, Event
 class PhantomUpdateHelper(HasTraits):
     
     phantom_modified = Event
+    
+    elements_name_modified = Event
    

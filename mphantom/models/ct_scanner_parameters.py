@@ -39,7 +39,7 @@ class CT_Scanner_Parameters(HasTraits):
 
 
     
-    imag_slice_type = Enum('512 x 512','256 x 256')    
+    imag_slice_type = Enum('512 x 512','256 x 256','1024 x 1024')    
     slice_size =Array(value=[512,512])
     
     ########################################################
@@ -143,13 +143,21 @@ class CT_Scanner_Parameters(HasTraits):
         if newvalue == '512 x 512':
             self.slice_size[0] = 512
             self.slice_size[1] = 512
+            self.spacing_x = 0.850
+            self.spacing_y = 0.850
             
         elif newvalue == '256 x 256':
             self.slice_size[0] = 256
             self.slice_size[1] = 256
-            
-       
-    
+            self.spacing_x = 1.5
+            self.spacing_y = 1.5
+        
+        elif newvalue == '1024 x 1024':
+            self.slice_size[0] = 1024
+            self.slice_size[1] = 1024
+            self.spacing_x = 0.42
+            self.spacing_y = 0.42
+        
     
     
     
@@ -196,11 +204,11 @@ class CT_Scanner_Parameters(HasTraits):
                                   
                              HGroup(Item('spacing_x', 
                                          label='X',
-                                       #  style='readonly',
+                                         style='readonly',
                                          width = 50),
                                     Item('spacing_y', 
                                          label='Y',
-                                       #  style='readonly',
+                                         style='readonly',
                                          width = 50),
               
                                     label = "Spacing"

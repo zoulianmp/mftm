@@ -36,6 +36,14 @@ class ThreeDimensionElement(BaseElement):
         
         self.geometry_tuner.on_trait_change(self.render_transformed_actor,'geo_tuner_changed')
         self.visual.on_trait_event(self.turn_on_vis_changed,'vis_changed')
+        self.general.on_trait_change(self.update_name,'name')
+        
+        
+    def update_name(self):
+        if self.helper is not None:
+           self.helper.elements_name_modified =True
+        
+        
       
     def get_data_for_json(self):
         '''Get a dict data for json output '''

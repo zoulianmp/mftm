@@ -88,8 +88,7 @@ class BaseElement(HasTraits):
    
         self.name = self.general.name
   
-    
-    
+
     def update_color(self):
         self.visual.color = self.general.color
 

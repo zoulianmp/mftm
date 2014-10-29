@@ -14,7 +14,7 @@ from traits.api import HasTraits, Enum,Range,Bool, \
 
 from traitsui.api import View, Item,VGroup,Spring
 from tvtk.api import tvtk
-
+from vtk.util import colors
 
 class EleBaseVisualProperty(HasTraits):
     '''A help Class for Phantom Element,this contains general properties.
@@ -22,7 +22,7 @@ class EleBaseVisualProperty(HasTraits):
      
     inner_actor = Instance( tvtk.Actor)
     
-    color = Tuple()
+    color = Tuple(colors.black)
     
     visibility = Bool(True)
 
@@ -36,13 +36,14 @@ class EleBaseVisualProperty(HasTraits):
     
     
     vis_changed = Event
-    
-    
+#    
+#    def __color_default(self):
+#        return Tuple((0.0,0.0,0.0))
                           
     def __init__(self,**traits):
         super(EleBaseVisualProperty,self).__init__(**traits)
         
-        color = Tuple((0.0,0.0,0.0))
+        self.color = (0.0,0.0,0.0)
                           
      
     def add_actors(self, actors):

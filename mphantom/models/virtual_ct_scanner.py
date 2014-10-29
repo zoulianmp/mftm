@@ -142,33 +142,43 @@ class Virtual_CT_Scanner(HasTraits):
         
         elist = phantom.get_sorted_elements_by_priority()
         
-        p_list = []
-  
-        for eletuple in elist:
+#        print "elist", elist
+#        print "len(elist):", len(elist)
+#        
+        if len(elist): 
+            return True
+        else:
+            return False
             
-            element = eletuple[1]
-            
-            p_value = element.general.priority 
-            if (p_list.count(p_value) > 0 ) :
-                message_box(message="The Priority of Element Conflict,Check the Priority Attribute of Element!",
-                                   title="Failure of Element Priority Check", severity='error')
-       
-                return False
-            p_list.append(p_value)
-               
-         
-#        for element in phantom.compound_elements:
-#            p_value = element.priority 
+#        
+#        
+#        p_list = []
+#  
+#        for eletuple in elist:
+#            
+#            element = eletuple[1]
+#            
+#            p_value = element.general.priority 
 #            if (p_list.count(p_value) > 0 ) :
-#                from pyface.api import MessageDialog
-#                dialog = MessageDialog(message="The Priority of Element Conflict,Check the Priority Attribute of Element!",
+#                message_box(message="The Priority of Element Conflict,Check the Priority Attribute of Element!",
 #                                   title="Failure of Element Priority Check", severity='error')
-#                dialog.open()
+#       
+#                return False
+#            p_list.append(p_value)
+#               
+#         
+##        for element in phantom.compound_elements:
+##            p_value = element.priority 
+##            if (p_list.count(p_value) > 0 ) :
+##                from pyface.api import MessageDialog
+##                dialog = MessageDialog(message="The Priority of Element Conflict,Check the Priority Attribute of Element!",
+##                                   title="Failure of Element Priority Check", severity='error')
+##                dialog.open()
 #           
 #                return False
 #            p_list.append(p_value)
         
-        return True
+     #   return True
              
        
     #Generate the White Image data for mask the phantom model 
@@ -176,8 +186,7 @@ class Virtual_CT_Scanner(HasTraits):
         
            params = self.scanning_paras       
         
-           fixed_size = (512,512)
-           
+                     
            bounds = self.phantom.get_bounds()
            
            print "phantom.bounds", bounds
@@ -212,6 +221,7 @@ class Virtual_CT_Scanner(HasTraits):
            
            dim= (params.slice_size[0],params.slice_size[1], params.slice_num )
            
+           print "The VTK Image Dims:", dim
            
            origin = ( origin_x, origin_y, origin_z)
            
@@ -236,7 +246,10 @@ class Virtual_CT_Scanner(HasTraits):
            image.scalar_type = vtkConstants.VTK_SHORT
            image.point_data.scalars = scalars.ravel()
         
+           print "Initial Generate the image array,in the _gen_image_data_by_numpy(self): "
            return image
+           
+           
        
     #get the air HU Value from selected scanner
     def _get_air_hu_value(self):
@@ -254,6 +267,17 @@ class Virtual_CT_Scanner(HasTraits):
        
                
         choice = dialog.open()
+        
+        print "Current spacing: ",self.scanning_paras.spacing_x, \
+                                  self.scanning_paras.spacing_y, \
+                                  self.scanning_paras.slice_thickness 
+    
+   
+    
+        
+        if self.has_cached_raw_data:
+            self.raw_data =[]
+            
          
         if choice == YES:    
             self.reset_viewers = True # Reset the slice views first

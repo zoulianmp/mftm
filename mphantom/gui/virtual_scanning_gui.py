@@ -58,7 +58,8 @@ class VirtualScannningGUI(HasTraits):
             self.image_viewer = VolumeImageSliceViews()
    
         print "Feed RawData to viewer"
-        self.image_viewer.volume = self.scanner.raw_data[0]
+        if len(self.scanner.raw_data):
+            self.image_viewer.volume = self.scanner.raw_data[0]
         
             
 

@@ -79,6 +79,9 @@ class ImageSetInfo(HasTraits):
     image_spacing_x =  Float(0.85)
     image_spacing_y =  Float(0.85)
     
+    #Exported UID
+    image_style = Enum('minimum','template')
+    
     
     
     #*****Date and Time variables********
@@ -95,8 +98,10 @@ class ImageSetInfo(HasTraits):
      
     
     def update_dataset(self,data_set):
+        
+        print "in the update_dataset, of image_set_info.py file"
         data_set.PatientID = self.patient_id 
-        data_set.PatientsName = self.patient_name
+        data_set.PatientsName = str(self.patient_name)
         
         data_set.PatientsBirthDate = self.patient_birth_date.strftime("%Y%m%d") 
         data_set.PatientBirthTime = self.patient_birth_time.strftime("%H%M%S.%f")

@@ -61,6 +61,8 @@ class MPhantom(HasTraits):
         self.three_dimension_elements = []
         self.four_dimension_elements = [] 
         self.helper.on_trait_event(self.trig_updated,'phantom_modified')
+        self.helper.on_trait_event(self.update_elements_ids,'elements_name_modified')
+        
         
         
           
@@ -76,7 +78,17 @@ class MPhantom(HasTraits):
         self.four_dimension_elements = []
         self.current_element = None
         
+    def update_elements_ids(self):
+
+        if self.phantom_type == "3DPhantom":
+            self.elements_ids = []
+            for element in self.three_dimension_elements:
+                
+                if self.element_name_exist(element): return      
+                self.elements_ids.append(element.name)
+               
         
+    
         
     def element_name_exist(self,element) :
           
@@ -265,9 +277,11 @@ class MPhantom(HasTraits):
         ele_3d.general.tissue_type = genal_paras["TissueType"]
         ele_3d.general.priority = genal_paras["Priority"]
         ele_3d.general.re_e_density = genal_paras["RelEDensity"]
+        
+
     
         
-        ele_3d.visual.color =  vis_paras["Color"]
+        ele_3d.visual.color =  tuple(vis_paras["Color"])
         ele_3d.visual.opacity = vis_paras["Opacity"]
         ele_3d.visual.representation = vis_paras["Representation"]
         ele_3d.visual.visibility =  vis_paras["Visibility"]
@@ -375,11 +389,19 @@ class MPhantom(HasTraits):
         
         from collections import OrderedDict
         
+        print "in the get sorted elements by priority"
         e_dict = { }
   
         for element in self.three_dimension_elements:
             key = element.general.priority 
-            e_dict[key] = element
+            
+            if key in e_dict:               
+               message_box(message="At Least two elements have the same priority.Please make sure that \
+                                    one element has a unique priority!",
+                                   title="Has The Same Priority", severity='error')
+               return []
+            else:
+               e_dict[key] = element
                
          
         for element in self.four_dimension_elements:

@@ -27,9 +27,11 @@ from util import ensure_dir, get_slice_from_3d_image
 #import time
 #import dicom
 import numpy as np
-           
+      
+from mphantom.api import message_box      
+      
 from dicom.dataset import Dataset, FileDataset
-from dicom.UID import  pydicom_root_UID
+from dicom.UID import  pydicom_root_UID, generate_uid
 from tvtk.api import tvtk
 from traitsui.menu import OKButton,  CancelButton
 
@@ -122,6 +124,17 @@ class DicomExporter(HasTraits):
         self.gen_init_dicom_dataset(data)
         
         return data
+   
+    def set_magical_phantom_info(self,dataset):
+        dataset.ReferringPhysiciansName = 'MagicalPhantomSoftware'
+        dataset.StudyDescription = "StudyGeneratedbyMagicalPhantom"
+        dataset.SeriesDescription = 'VitualScanSeries'       
+        dataset.OperatorsName = "MPhantom"
+        
+        dataset.Manufacturer ='Zoulian@SichuanProvincialPeople\'sHospital'
+        dataset.ManufacturersModelName = 'MagicalPhantom'
+        dataset.StationName = 'MPLabDicom'
+        
         
           
     def _file_meta_data_default(self):
@@ -142,7 +155,14 @@ class DicomExporter(HasTraits):
          
     @on_trait_change('image_set_info')
     def update_uid_root(self):
-        self.uid_root =  pydicom_root_UID + self.image_set_info.time_stamp_str 
+        
+       # self.uid_root = '2.16.840.1.11437.' + self.image_set_info.time_stamp_str 
+       # self.uid_root =  pydicom_root_UID + self.image_set_info.time_stamp_str 
+        
+        self.uid_root = generate_uid()
+        
+        #Modified from XIO Exported
+        #self.uid_root = '2.16.840.1.114337.48549638231683.31568.1413937193.0' 
         
         print "image_set_info chaged, call the invoke function! in the  def update_uid_root(self): "
         
@@ -191,21 +211,27 @@ class DicomExporter(HasTraits):
         """
         dataset.PatientsName = 'TestPhantom'
         dataset.PatientID ='0001'
-        dataset.PatientsBirthDate = '0'
-        dataset.PatientsSex = 'Other'
+        dataset.PatientsBirthDate = '20141021'
+        dataset.PatientBirthTime = '185734.112201'
+        
+        
+        dataset.PatientsSex = 'O'
 
      
     def gen_general_study_module(self,dataset):
         """Generate the CT Image Storage General Study Module Attributes
         """
-        dataset.StudyInstanceUID = self.uid_root +'.' + '5'
+        # dataset.StudyInstanceUID = self.uid_root +'.' + '5'
+        
+        #from the Xio exported file
+        dataset.StudyInstanceUID = '2.16.840.1.114337.48549638231683.31568.1413937193.0'
         
         from datetime import datetime
     
         tim = datetime.now()
         
         date = tim.strftime("%Y%m%d")
-        time = tim.strftime("%H%M%S")
+        time = tim.strftime("%H%M%S.%f")
      
         
         
@@ -227,7 +253,12 @@ class DicomExporter(HasTraits):
         """Generate the CT Image Storage General Series Module Attributes
         """
         dataset.Modality = 'CT'
-        dataset.SeriesInstanceUID =  self.uid_root +'.' + '8'
+        #dataset.SeriesInstanceUID =  self.uid_root +'.' + '5'+'.' + '1.8'
+        
+        #from the Xio exported file
+        dataset.SeriesInstanceUID = '2.16.840.1.114337.48549638231683.31568.1413937193.0.1.4'
+       
+        
         dataset.PatientPosition = 'HFS'
         dataset.SeriesDescription = 'VitualScanSeries'       
         dataset.SeriesNumber = "2"
@@ -235,7 +266,11 @@ class DicomExporter(HasTraits):
     def gen_frame_of_reference_uid_module(self,dataset):
         """Generate the CT Image Storage frame_of_reference_uid Module Attributes
         """
-        dataset.FrameofReferenceUID = self.uid_root +'.' + '15'
+        # dataset.FrameofReferenceUID = self.uid_root +'.' + '5'+'.' + '15'
+        
+        #from the Xio exported file
+        dataset.FrameofReferenceUID =  '2.16.840.1.114337.48549638231683.31568.1413937193.0.2'
+        
         dataset.PositionReferenceIndicator = ' '
     
     def gen_general_equipment_module(self,dataset):
@@ -303,11 +338,14 @@ class DicomExporter(HasTraits):
         dataset.SOPClassUID = '1.2.840.10008.5.1.4.1.1.2'
         dataset.SOPInstanceUID = self.uid_root+'.' + str(self.sop_instance_uid_start_value) # start value is 39
         
-        dataset.SoftwareVersions = "1.0.0"
+        dataset.SoftwareVersions = "2.0.0"
         
         dataset.SpecificCharacterSet = "ISO_IR 100"
         
-        dataset.InstanceCreatorUID = self.uid_root
+       # dataset.InstanceCreatorUID = self.uid_root
+        
+        #Set From Xio Exported file
+        dataset.InstanceCreatorUID = '2.16.840.1.114337'
         
     def gen_init_dicom_dataset(self,dataset):
         """Generate the init Dicom DataSet,in the dataset,have some fixed uid suffix value:
@@ -448,11 +486,11 @@ class DicomExporter(HasTraits):
                
                 if out_version == 'Dicom CTImage':
                     
-                    fds = FileDataset(out_file_name, slice_dataset) 
-                    fds.save_as(out_file_name)
+#                    fds = FileDataset(out_file_name, slice_dataset) 
+#                    fds.save_as(out_file_name)
              
                      # Create the FileDataset instance (initially no data elements, but file_meta supplied)
-                   
+#                   
                     fds = FileDataset(out_file_name, slice_dataset,file_meta=self.file_meta_data, preamble="\0"*128) 
                     fds.save_as(out_file_name)
                     
@@ -460,7 +498,7 @@ class DicomExporter(HasTraits):
 #                  
 #                    fds = FileDataset(out_file_name,slice_dataset, file_meta=self.file_meta_data)  
 #                    fds.save_as(out_file_name)
-#           
+           
 #       
     
        
@@ -471,10 +509,12 @@ class DicomExporter(HasTraits):
         
         ensure_dir(dicoms_out_dir)
         
-        #self.image_style = 'template'
+        if self.export_property.export_style == "EcliseTPS-CTImage":
+            self.image_style = 'template'
     
         if self.image_style == 'template':
             self.slice_dataset = self.slice_template
+           # self.set_magical_phantom_info( self.slice_dataset)
                 
         elif self.image_style == 'minimum':
             self.slice_dataset = self.dicom_minimum
@@ -486,7 +526,12 @@ class DicomExporter(HasTraits):
             self.gen_dicom_files(dicoms_out_dir,self.image_3d,self.image_set_info,self.slice_dataset)
         
             print "**********Dicom CT Exported Successfully*****************************/n"
-  
+            
+            print self.image_style
+            content = self.export_property.export_style + "  Exported Successfully"
+            
+            message_box(message= content,
+                                   title="Exported Successfully", severity='information')
         elif len(self.image_sets) > 1:
             #Do multiple image sets export
             print "in the multiple image sets export"
