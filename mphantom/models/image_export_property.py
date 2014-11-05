@@ -48,6 +48,22 @@ class ImageExportProperty(HasTraits):
     output_dir = Directory('./image_output')
     
   
+  
+  
+  
+#*******************************************************
+#  Export  related properties
+#*******************************************************  
+    @on_trait_change('export_style')
+    def _export_style_callback(self):
+        if self.export_style == 'Dicom CTImage':
+            self.file_name_prefix = 'Vscan.CT.'
+            self.file_name_suffix = 'phantom.dcm'
+            
+        elif self.export_style == 'EcliseTPS-CTImage' :
+           
+            self.file_name_prefix = 'EcliseTPS.CT.'
+            self.file_name_suffix = 'phantom.dcm'
 
     #***************************************************************************
     #

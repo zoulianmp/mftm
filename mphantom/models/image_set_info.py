@@ -141,7 +141,7 @@ class ImageSetInfo(HasTraits):
 
         
            
-        full_study_id = '0108' + self.date + '000'+ self.short_study_id
+        full_study_id = self.date + '000'+ self.short_study_id
         data_set.StudyID =  full_study_id
 
         
