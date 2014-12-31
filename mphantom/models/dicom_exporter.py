@@ -78,12 +78,13 @@ class DicomExporter(HasTraits):
    
     sop_instance_uid_root = Str()
     
-    borrow_uidroot = '2.16.840.1.114337.'
+   # borrow_uidroot = '2.16.840.1.114337.'
          
     #********************************************************************
     #Initial member variable
     def  _sop_instance_uid_root_default(self):
-        return   generate_uid(self.borrow_uidroot)      
+        return   generate_uid()      
+        #return   generate_uid(self.borrow_uidroot)      
          
     def _slice_template_default(self):
            
@@ -118,17 +119,7 @@ class DicomExporter(HasTraits):
         
         return data
    
-    def set_magical_phantom_info(self,dataset):
-        dataset.ReferringPhysiciansName = 'MagicalPhantomSoftware'
-        dataset.StudyDescription = "StudyGeneratedbyMagicalPhantom"
-        dataset.SeriesDescription = 'VitualScanSeries'       
-        dataset.OperatorsName = "MPhantom"
-        
-        dataset.Manufacturer ='Zoulian@SichuanProvincialPeople\'sHospital'
-        dataset.ManufacturersModelName = 'MagicalPhantom'
-        dataset.StationName = 'MPLabDicom'
-        dataset.SoftwareVersions = "2.0.0"
-        
+ 
         
           
     def _file_meta_data_default(self):
@@ -194,6 +185,8 @@ class DicomExporter(HasTraits):
         dataset.PatientsSex = 'O'
 
      
+
+     
     def gen_general_study_module(self,dataset):
         """Generate the CT Image Storage General Study Module Attributes
         """
@@ -202,7 +195,8 @@ class DicomExporter(HasTraits):
         #from the Xio exported file
         
        
-        dataset.StudyInstanceUID =   generate_uid(self.borrow_uidroot)
+        # dataset.StudyInstanceUID =   generate_uid(self.borrow_uidroot)
+        dataset.StudyInstanceUID =   generate_uid()
         
         from datetime import datetime
     
@@ -216,7 +210,7 @@ class DicomExporter(HasTraits):
         dataset.StudyDate = date
         #dataset.StudyTime = self.time + '.00'
         dataset.StudyTime = time 
-        dataset.AccessionNumber = '301'+date+time
+        dataset.AccessionNumber = '3'
         
         
         
@@ -234,7 +228,8 @@ class DicomExporter(HasTraits):
         #dataset.SeriesInstanceUID =  self.uid_root +'.' + '5'+'.' + '1.8'
         
         #from the Xio exported file
-        dataset.SeriesInstanceUID = generate_uid(self.borrow_uidroot)
+        # dataset.SeriesInstanceUID = generate_uid(self.borrow_uidroot)
+        dataset.SeriesInstanceUID = generate_uid()
        
         
         dataset.PatientPosition = 'HFS'
@@ -247,7 +242,8 @@ class DicomExporter(HasTraits):
         # dataset.FrameofReferenceUID = self.uid_root +'.' + '5'+'.' + '15'
         
         #from the Xio exported file
-        dataset.FrameofReferenceUID =  generate_uid(self.borrow_uidroot)
+        dataset.FrameofReferenceUID =  generate_uid()
+        #dataset.FrameofReferenceUID =  generate_uid(self.borrow_uidroot)
         
         dataset.PositionReferenceIndicator = ' '
     
@@ -515,7 +511,17 @@ class DicomExporter(HasTraits):
     
         if self.image_style == 'template':
             self.slice_dataset = self.slice_template
-            self.set_magical_phantom_info( self.slice_dataset)
+            
+         #   self.set_magical_phantom_info( self.slice_dataset) #get the wrong files
+            
+            
+            self.set_magical_phantom_descript_info( self.slice_dataset)
+            self.set_magical_phantom_uids( self.slice_dataset)
+            
+            #the up two functions get the right files
+            
+            
+            
                 
         elif self.image_style == 'minimum':
             self.slice_dataset = self.dicom_minimum
@@ -538,10 +544,50 @@ class DicomExporter(HasTraits):
             print "in the multiple image sets export"
             pass
             
-
+#############################################################################
+#****
+#**** Update dcm file template， Define the modifier functions
+#****            
     
+    def set_magical_phantom_info(self,dataset):
+        ''' 
+        Set the Magical Phantom related information to dcm template.
+        '''
+        self.gen_general_study_module(dataset)
+        self.gen_general_series_module(dataset)
+        self.gen_frame_of_reference_uid_module(dataset)
+        self.gen_general_equipment_module(dataset)
+  
+    
+    
+    def set_magical_phantom_descript_info(self,dataset):
+        dataset.ReferringPhysiciansName = 'MagicalPhantomSoftware'
+        dataset.StudyDescription = "StudyGeneratedbyMagicalPhantom"
+        dataset.SeriesDescription = 'VitualScanSeries'       
+        dataset.OperatorsName = "MPhantom"
+        
+        dataset.Manufacturer ='Zoulian@SichuanProvincialPeople\'sHospital'
+        dataset.ManufacturersModelName = 'MagicalPhantom'
+        dataset.StationName = 'MPLabDicom'
+        dataset.SoftwareVersions = "2.0.0"
+        
+    def set_magical_phantom_uids(self,dataset):
+        import time
+      
+        dataset.InstanceCreatorUID = pydicom_root_UID + "1" 
+        
+        
+        dataset.StudyInstanceUID =  generate_uid()
+        time.sleep(0.156)
+
+        dataset.SeriesInstanceUID = generate_uid()
+        time.sleep(0.156)
+        
+        dataset.FrameofReferenceUID =  generate_uid()
 
 
+        
+        
 
  
 ####################################
