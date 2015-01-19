@@ -334,6 +334,7 @@ class Add3DElementAction(Action):
         if ui.result:
             
              currentphantom.add_3d_element(dialog.ele)
+             dialog.ele.geom_modified = True
              
            
            

@@ -38,6 +38,7 @@ class ThreeDimensionElement(BaseElement):
         self.visual.on_trait_event(self.turn_on_vis_changed,'vis_changed')
         self.general.on_trait_change(self.update_name,'name')
         
+        self.on_trait_event(self.update_geometry,'geom_modified')
         
     def update_name(self):
         if self.helper is not None:

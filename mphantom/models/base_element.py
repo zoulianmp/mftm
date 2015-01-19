@@ -47,7 +47,10 @@ class BaseElement(HasTraits):
     visual = Instance(EleBaseVisualProperty)
     geometry_tuner = Instance(EleBaseGeometryTuner)
     
+    geom_modified = Event
+    
     geometry = Instance(BaseGeometry)
+    
     
     ele_vis_modified = Event
     

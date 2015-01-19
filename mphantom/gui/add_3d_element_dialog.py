@@ -80,7 +80,7 @@ class Add3DElementDialog(HasTraits):
            """
            
            self.ele.geometry = self.current_geometry
-        
+           self.ele.geom_modified = True
    
         
         
