@@ -13,10 +13,36 @@ from vtk.util import vtkConstants
 
 
 
+
+ELEMENT_LIB_PATH = ""
+
+
+def set_element_lib_path(mainpath):
+    
+    
+    
+    global ELEMENT_LIB_PATH 
+      
+    
+    import os
+   
+    ELEMENT_LIB_PATH= os.path.join(os.path.dirname(mainpath), 'elements_lib')
+
+
+
 def get_main_dir():
           
     mainpath = os.getcwd()
     return mainpath
+
+def get_residual_filename(prepath, fullpath):
+           
+    fullsize = len(fullpath)
+    prenum =  len(prepath) 
+    
+    residual = fullpath[prenum:fullsize]
+    
+    return residual
 
 
 #**********************************************

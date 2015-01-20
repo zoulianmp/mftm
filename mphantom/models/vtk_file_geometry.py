@@ -8,7 +8,7 @@ class VTKFileGeometry(BaseGeometry):
     
     
     
-    
+      
      external_file_name = File()
      
      file_reader = tvtk.PolyDataReader()
@@ -31,7 +31,13 @@ class VTKFileGeometry(BaseGeometry):
           '''Get a dict data for json output '''
           data = {}
           data["GeoType"] = "VTKExternalFile"
-          data["InitialParams"] = [self.external_file_name]
+          
+          from .util import get_residual_filename, ELEMENT_LIB_PATH
+       
+          
+          residual = get_residual_filename(ELEMENT_LIB_PATH,self.external_file_name)
+          
+          data["InitialParams"] = [residual]
        
           return data       
      

@@ -24,7 +24,7 @@ from envisage.developer.ui.developer_ui_plugin import DeveloperUIPlugin
 
 # Local imports.
 from mphantom.api import MPhantomApplication, RunManagerPlugin, \
-                         MPhantomUIPlugin
+                         MPhantomUIPlugin,set_element_lib_path
                            
 
    
@@ -58,6 +58,10 @@ def main(argv):
 
 
 if __name__ == '__main__':
+    
+    set_element_lib_path(__file__)
+
+    
     import sys
    
     main(sys.argv)

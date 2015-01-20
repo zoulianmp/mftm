@@ -8,6 +8,8 @@ Created on Mon Oct 31 14:37:11 2011
 @Chengdu,Sichuan,China
 """
 
+from traits.api import on_trait_change
+
 from traits.api import HasTraits, Str, Dict, Enum, Float,Range,Instance, \
                        Bool,DelegatesTo, Event
 
@@ -84,6 +86,8 @@ class BaseElement(HasTraits):
         self.visual =  EleBaseVisualProperty()
         self.geometry_tuner = EleBaseGeometryTuner()
         self.geometry = BaseGeometry()
+          
+        self.on_trait_event(self.update_geometry,'geom_modified')
         
         self.visual.inner_actor = self.geometry.current_actor
      
@@ -123,6 +127,18 @@ class BaseElement(HasTraits):
     def mask_image_by_geometry(self,inimage,bgvalue):
         pass
         
+    @on_trait_change('geometry' )    
+    def update_geometry(self):
+        
+        self.visual.inner_actor = self.geometry.current_actor
+       
+        self.visual.update_scene()
+        
+        if self.helper is not None:
+            self.helper.phantom_modified =True
+        
+        
+  
     
 
 if __name__ == '__main__':

@@ -5,6 +5,16 @@ Created on Tue Nov 22 10:40:43 2011
 @author: IMRTQA
 """
 
+
+#*******************************************
+# Gloable Varians  import
+#*******************************************
+from models.util import ELEMENT_LIB_PATH,set_element_lib_path,get_residual_filename
+
+
+
+
+
 from models.util import get_main_dir, ensure_dir, message_box, get_slice_from_3d_image
 
 from models.debug_helpers import polydata_render,image_volume_render, image_volume_slice_view, \
@@ -102,10 +112,6 @@ from gui.mphantom_actions import RenamePhantomAction, LoadPhantomAction, SavePha
                                  Add3DElementAction, DeletCurrentElementAction
                                  
 from gui.mphantom_actions import ScannerTaskAction,ModelingTaskAction,StartupTaskAction
-
-
-
-
 
 
 

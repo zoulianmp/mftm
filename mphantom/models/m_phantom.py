@@ -232,15 +232,26 @@ class MPhantom(HasTraits):
         
         
         elif geo_type == "VTKExternalFile" :
-            geometry =  VTKFileGeometry(external_file_name = inits)
+            
+            from .util import ELEMENT_LIB_PATH
+            
+            filename = ELEMENT_LIB_PATH + inits[0]
+            
+            geometry =  VTKFileGeometry()
+                  
+            geometry.external_file_name = filename
                   
             return geometry 
             
         
         
         elif geo_type == "STLExternalFile" :
-            geometry =  STLFileGeometry(external_file_name = inits)
-                    
+            from .util import ELEMENT_LIB_PATH
+            
+            filename = ELEMENT_LIB_PATH + inits[0]
+            geometry =  STLFileGeometry()
+            
+            geometry.external_file_name = filename
             return geometry 
      
         else :
@@ -270,8 +281,7 @@ class MPhantom(HasTraits):
         
         ele_3d.geometry = self.pars_3d_geometry(geo_paras)
         
-        
-        
+       
         
        
         ele_3d.general.tissue_type = genal_paras["TissueType"]
@@ -326,6 +336,10 @@ class MPhantom(HasTraits):
         
         for jsonele in data["3DElementsSet"]:
             element = self.parse_3d_element(jsonele)
+            
+          #  element.geom_modified = True  #Trig the Event Update the GUI part 
+        
+            
             element.helper = self.helper
              
             self.add_3d_element(element)  #Add three-d elements and element names

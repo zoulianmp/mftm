@@ -37,9 +37,7 @@ class ThreeDimensionElement(BaseElement):
         self.geometry_tuner.on_trait_change(self.render_transformed_actor,'geo_tuner_changed')
         self.visual.on_trait_event(self.turn_on_vis_changed,'vis_changed')
         self.general.on_trait_change(self.update_name,'name')
-        
-        self.on_trait_event(self.update_geometry,'geom_modified')
-        
+      
     def update_name(self):
         if self.helper is not None:
            self.helper.elements_name_modified =True
@@ -87,18 +85,7 @@ class ThreeDimensionElement(BaseElement):
             self.helper.phantom_modified =True
         
     
-    @on_trait_change('geometry' )    
-    def update_geometry(self):
-        
-        self.visual.inner_actor = self.geometry.current_actor
-       
-        self.visual.update_scene()
-        
-        if self.helper is not None:
-            self.helper.phantom_modified =True
-        
-        
-  
+   
          
       
         
