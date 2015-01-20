@@ -23,7 +23,7 @@ from traitsui.api import View, Item, Spring, Group
 from base_element import BaseElement
 from three_dimension_element import ThreeDimensionElement
 
-from mphantom.api import PhantomUpdateHelper,message_box
+from mphantom.api import PhantomUpdateHelper,message_box,makesure_element_in_lib
 from mphantom.api import  ConeGeometry, CubeGeometry, CylinderGeometry, \
                           SphereGeometry, STLFileGeometry, VTKFileGeometry
 
@@ -237,6 +237,8 @@ class MPhantom(HasTraits):
             
             filename = ELEMENT_LIB_PATH + inits[0]
             
+            makesure_element_in_lib(ELEMENT_LIB_PATH, inits[0])
+            
             geometry =  VTKFileGeometry()
                   
             geometry.external_file_name = filename
@@ -249,6 +251,9 @@ class MPhantom(HasTraits):
             from .util import ELEMENT_LIB_PATH
             
             filename = ELEMENT_LIB_PATH + inits[0]
+           
+            makesure_element_in_lib(ELEMENT_LIB_PATH, inits[0])
+            
             geometry =  STLFileGeometry()
             
             geometry.external_file_name = filename

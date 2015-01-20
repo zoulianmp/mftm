@@ -28,6 +28,18 @@ def set_element_lib_path(mainpath):
    
     ELEMENT_LIB_PATH= os.path.join(os.path.dirname(mainpath), 'elements_lib')
 
+def makesure_element_in_lib(rootpath, elementname):
+    import os 
+    
+    fname = rootpath + elementname
+    exist = os.path.exists(fname)
+    
+    if not exist:
+        
+        tips = "The element: " + elementname + " is not in your elements libs,pelease makesure your element lib is right for your use!"
+        topinfo="Element not In Libs"
+
+        message_box(message=tips, title=topinfo, severity='error')
 
 
 def get_main_dir():
