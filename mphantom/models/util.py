@@ -15,18 +15,24 @@ from vtk.util import vtkConstants
 
 
 ELEMENT_LIB_PATH = ""
+CFG_PATH = ""
 
 
-def set_element_lib_path(mainpath):
+
+def set_system_path(mainpath):
     
     
     
     global ELEMENT_LIB_PATH 
-      
+    global CFG_PATH
     
     import os
    
     ELEMENT_LIB_PATH= os.path.join(os.path.dirname(mainpath), 'elements_lib')
+    CFG_PATH =  os.path.join(os.path.dirname(mainpath), 'mphantom\config')
+    
+    
+    
 
 def makesure_element_in_lib(rootpath, elementname):
     import os 

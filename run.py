@@ -59,7 +59,7 @@ def main(argv):
 
 if __name__ == '__main__':
     
-    set_element_lib_path(__file__)
+    set_system_path(__file__)
 
     
     import sys

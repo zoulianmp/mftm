@@ -12,7 +12,7 @@ Created on Mon Oct 07 10:35:18 2013
 
 
 from traits.api import HasTraits, Unicode, Dict, Enum, Float, \
-                       Range,Instance,Bool, Tuple,Event
+                       Range,Instance,Bool, Tuple,Event,File
                        
 from traitsui.api import View, Item,Readonly,VGroup,Spring
 
@@ -26,6 +26,7 @@ class EleGeneralProperty(HasTraits):
     '''A help Class for Phantom Element,this contains general properties.
     '''
      
+    materials_list =  File()
     
     name = Unicode('BaseElement') 
     
@@ -136,6 +137,17 @@ class EleGeneralProperty(HasTraits):
                     
                     
     gener_vis_props_changed = Event          
+    
+    def __init__(self,**traits):
+        super(EleGeneralProperty, self).__init__(**traits)
+        
+        #Set the default MaterialListFile
+        
+                    
+    def _materials_list_changed(self,old,new): 
+         
+          print "The Material List Changed, ", new
+                         
                     
     def get_data_for_json(self):
         '''Get a dict data for json output '''
@@ -168,6 +180,7 @@ class EleGeneralProperty(HasTraits):
                               label='ElementName',
                               resizable = True), 
                          Spring(),
+                         Item(name='materials_list'),
                          Item(name='tissue_type',
                               label='TissueType',
                               width= 100,
