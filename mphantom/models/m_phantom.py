@@ -139,7 +139,9 @@ class MPhantom(HasTraits):
         """
         data = {}
         
-        
+        from .util import MATE_LIST_FILE,get_residual_filename,CFG_PATH
+      
+        data["MaterialList"] =get_residual_filename(CFG_PATH,MATE_LIST_FILE)
         data["Name"] = self.name       
         data["Type"] = self.phantom_type 
         
@@ -334,6 +336,15 @@ class MPhantom(HasTraits):
             data = json.load(infile)
             
     
+    
+        from .util import update_material_list, CFG_PATH
+         
+        
+        material_list = CFG_PATH +  data["MaterialList"]
+        
+        update_material_list(material_list)
+  
+  
         self.name = data["Name"]
         
         self.phantom_type =data["Type"]

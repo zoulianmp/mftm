@@ -17,20 +17,27 @@ from vtk.util import vtkConstants
 ELEMENT_LIB_PATH = ""
 CFG_PATH = ""
 
-
+MATE_LIST_FILE =" "
 
 def set_system_path(mainpath):
-    
-    
-    
+      
     global ELEMENT_LIB_PATH 
     global CFG_PATH
+    global MATE_LIST_FILE
+    
     
     import os
    
     ELEMENT_LIB_PATH= os.path.join(os.path.dirname(mainpath), 'elements_lib')
     CFG_PATH =  os.path.join(os.path.dirname(mainpath), 'mphantom\config')
+
+    MATE_LIST_FILE = CFG_PATH + "\default_material_list.txt"
     
+    
+def update_material_list(fname):
+    global MATE_LIST_FILE
+    
+    MATE_LIST_FILE = fname
     
     
 

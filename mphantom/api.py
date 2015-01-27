@@ -9,8 +9,9 @@ Created on Tue Nov 22 10:40:43 2011
 #*******************************************
 # Gloable Varians  import
 #*******************************************
-from models.util import ELEMENT_LIB_PATH,set_element_lib_path,get_residual_filename, \
-                        makesure_element_in_lib
+from models.util import ELEMENT_LIB_PATH,CFG_PATH,MATE_LIST_FILE
+from models.util import set_system_path,get_residual_filename, \
+                        makesure_element_in_lib,update_material_list
 
 
 

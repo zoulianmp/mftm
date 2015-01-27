@@ -25,6 +25,42 @@ from mphantom.api import ActorsViewer,VTKFileGeometry, STLFileGeometry,ELEMENT_L
 
 if __name__ == '__main__':
     
+    from enthought.traits.api import *
+    
+    class Test ( HasTraits ):
+    
+        value = Str( 'one' )
+        values = List( [ 'one', 'two', 'three' ] )
+        
+        view = View( Item( 'value', editor = EnumEditor( name = 'values' ) ) )
+        def _value_changed ( self, value ): 
+           self.values.append( value + ' more' )
+        
+    Test().configure_traits()
+        
+        
+        
+        
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     set_element_lib_path(__file__)
 #    print "ELEMENT_LIB_PATH : " , ELEMENT_LIB_PATH
 #    

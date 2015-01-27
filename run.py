@@ -24,7 +24,7 @@ from envisage.developer.ui.developer_ui_plugin import DeveloperUIPlugin
 
 # Local imports.
 from mphantom.api import MPhantomApplication, RunManagerPlugin, \
-                         MPhantomUIPlugin,set_element_lib_path
+                         MPhantomUIPlugin,set_system_path
                            
 
    
