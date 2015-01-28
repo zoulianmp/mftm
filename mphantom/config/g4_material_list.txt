@@ -1,8 +1,8 @@
-MaterialName,RelativeEDensity,R,G,B
-G4_Air,0.001,0.1,0.5,0.3 
-G4_Lung,0.294, 0.1,0.5,0.3 
-G4_LungInhale,0.190,0.3,0.5,0.3 
-G4_LungExhale,0.489,0.1,0.5,0.3 
-G4_AdiposeTissue,0.926,0.2,0.5,0.3                                                     
-G4_BreastTissue,0.976,0.4,0.5,0.3                           
+MaterialName,RelativeEDensity,R,G,B,Density
+G4_Air,0.001,0.1,0.5,0.3,0.1
+G4_Lung,0.294,0.1,0.5,0.3,0.46
+G4_LungInhale,0.190,0.3,0.5,0.3,0.2 
+G4_LungExhale,0.489,0.1,0.5,0.3,0.5 
+G4_AdiposeTissue,0.926,0.2,0.5,0.3,0.96                                                     
+G4_BreastTissue,0.976,0.4,0.5,0.3,0.99                           
 

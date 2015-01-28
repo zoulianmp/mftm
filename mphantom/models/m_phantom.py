@@ -294,6 +294,7 @@ class MPhantom(HasTraits):
         ele_3d.general.tissue_type = genal_paras["TissueType"]
         ele_3d.general.priority = genal_paras["Priority"]
         ele_3d.general.re_e_density = genal_paras["RelEDensity"]
+        ele_3d.general.mass_density = genal_paras["Density"]
         
 
     

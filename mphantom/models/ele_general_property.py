@@ -11,7 +11,7 @@ Created on Mon Oct 07 10:35:18 2013
 """
 
 
-from traits.api import HasTraits, Unicode, Dict, Enum, Float, \
+from traits.api import HasTraits, Unicode, Dict, Enum, Int, Float, \
                        Range,Instance,Bool, Tuple,Event,File,Str,List
                        
 from traitsui.api import View, Item,Readonly,VGroup,Spring,EnumEditor
@@ -29,14 +29,14 @@ class EleGeneralProperty(HasTraits):
     materials_list =  File()
     
     name = Unicode('BaseElement') 
-         
-    EnumEditor
+
         
     materials_table ={}
     
-
-    tissue_type =Str()
-    namelist = List([])
+    namelist = List(Str)
+    tissue_type =Enum(values='namelist')
+    material_index = Int()
+    
     
     # A simple trait to Set the Element material.
     #tissue_type =  Enum('Air', 
@@ -56,6 +56,9 @@ class EleGeneralProperty(HasTraits):
 
     # Relative Electronic Density 
     re_e_density = Float(0.001)
+    
+    #The mass density for element
+    mass_density = Float(0.0)
     
     # Predefined Color for material.
     
@@ -80,7 +83,7 @@ class EleGeneralProperty(HasTraits):
         super(EleGeneralProperty, self).__init__(**traits)
         
         #Set the default MaterialListFile
-        from .util import MATE_LIST_FILE
+        from util import MATE_LIST_FILE
         #global CFG_PATH
       
         self.materials_list = MATE_LIST_FILE
@@ -92,7 +95,7 @@ class EleGeneralProperty(HasTraits):
          
         print "The Material List Changed to --> ", new
                        
-        from .util import update_material_list
+        from util import update_material_list
                      
         update_material_list(new)
   
@@ -115,9 +118,9 @@ class EleGeneralProperty(HasTraits):
                 name = row["MaterialName"]
                 RED =  float(row["RelativeEDensity"])
                 clour = (float(row["R"]),float(row["G"]),float(row["B"]))
-                
+                density = float(row["Density"])
                 self.namelist.append(name)
-                self.materials_table[name] = (RED,clour)
+                self.materials_table[name] = (RED,clour,density)
            
         csvfile.close() 
            
@@ -128,7 +131,7 @@ class EleGeneralProperty(HasTraits):
         data["Priority"] = self.priority
         data["RelEDensity"] = self.re_e_density
         data["TissueType"] = self.tissue_type
-        
+        data["Density"] = self.mass_density
         return data
       
                     
@@ -142,6 +145,11 @@ class EleGeneralProperty(HasTraits):
         
         self.color = self.materials_table[value][1]
        # self.color = self.material_color_dict[self.tissue_type]
+        
+        self.mass_density = self.materials_table[value][2]
+        self.material_index = self.namelist.index(value)  
+        
+        print "The material_index : ", self.material_index
         
         self.gener_vis_props_changed = True
         
@@ -159,12 +167,15 @@ class EleGeneralProperty(HasTraits):
                          Item(name='tissue_type',
                               label='TissueType',
                               width= 100,
-                              editor = EnumEditor( name = 'namelist' ), 
                               resizable = True), 
                          Spring(),
                          Spring(),
+                         Readonly(name='material_index',
+                                  label='MaterialIndex '),
                          Readonly(name='re_e_density',
                                   label='ReElectronDensity'),
+                         Readonly(name='mass_density',
+                                  label='MassDensity (g/cm3)'),
                          Spring(),
                          Spring(),
                          Item('_'),

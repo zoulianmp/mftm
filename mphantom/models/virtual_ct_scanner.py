@@ -40,6 +40,8 @@ class Virtual_CT_Scanner(HasTraits):
     raw_data =List(tvtk.ImageData) 
         
     
+    
+    
     #A broker for dicom export
     image_exporter = Instance (ImageSetExporter)
     
@@ -428,12 +430,12 @@ class Virtual_CT_Scanner(HasTraits):
         print "Do polydata to image "
        
 #        #*******************************************
-        sphere = tvtk.SphereSource()
-        sphere.phi_resolution = 80
-        sphere.theta_resolution = 80
-        sphere.center = (0,0,0)
-        sphere.radius = 30
-        sphere.update()        
+#        sphere = tvtk.SphereSource()
+#        sphere.phi_resolution = 80
+#        sphere.theta_resolution = 80
+#        sphere.center = (0,0,0)
+#        sphere.radius = 30
+#        sphere.update()        
    
          
         triangle = tvtk.TriangleFilter()
