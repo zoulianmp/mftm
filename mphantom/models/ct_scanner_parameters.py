@@ -198,7 +198,7 @@ class CT_Scanner_Parameters(HasTraits):
                                          style='readonly',
                                          width = 50),
                                    
-                                    label = "Center "
+                                    label = "PhantomCenter "
                                   
                                   ),
                                   

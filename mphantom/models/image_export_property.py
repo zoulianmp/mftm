@@ -43,12 +43,11 @@ class ImageExportProperty(HasTraits):
     file_name_prefix = Str('Vscan.CT.')
     file_name_suffix = Str('phantom.dcm')
     
-    export_style = Enum('Dicom CTImage','EcliseTPS-CTImage','GEANT4 Geometry',
-                        'EGSnrc Geometry','FoxChase-MCTP Geometry')
+    export_style = Enum('Dicom CTImage','EcliseTPS-CTImage','GEANT4 Geometry')
+                 #       'EGSnrc Geometry','FoxChase-MCTP Geometry')
     output_dir = Directory('./image_output')
-    
-  
-  
+     
+    style_flag = Int(0)
   
   
 #*******************************************************
@@ -59,11 +58,18 @@ class ImageExportProperty(HasTraits):
         if self.export_style == 'Dicom CTImage':
             self.file_name_prefix = 'Vscan.CT.'
             self.file_name_suffix = 'phantom.dcm'
+            self.style_flag = 0
             
         elif self.export_style == 'EcliseTPS-CTImage' :
            
             self.file_name_prefix = 'EcliseTPS.CT.'
             self.file_name_suffix = 'phantom.dcm'
+            self.style_flag = 0
+        elif self.export_style == 'GEANT4 Geometry':
+            self.file_name_prefix = 'mphantom.'
+            self.file_name_suffix = 'g4dcm'
+            self.style_flag = 1
+        
 
     #***************************************************************************
     #

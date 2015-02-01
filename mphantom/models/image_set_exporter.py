@@ -34,65 +34,107 @@ from tvtk.api import tvtk
 from traitsui.menu import OKButton,  CancelButton
 
 from vtk.util import vtkConstants
-
+from traits.api import Delegate
 
 from image_export_property import ImageExportProperty
 
-from image_set_info import ImageSetInfo
+from dicom_image_set_info import DicomImageSetInfo
+
+from g4_image_set_info import G4ImageSetInfo
 
 from dicom_exporter import DicomExporter
+
+from g4_geometry_exporter import G4GeometryExporter
+
+
     
 class ImageSetExporter(HasTraits):
+        
+    
    
-    image_sets = List(tvtk.ImageData) 
+    image_sets = List(tvtk.ImageData) #CT images set
+    
+    index_sets =  List(tvtk.ImageData) # Phantom's index set
+    density_sets = List(tvtk.ImageData) # phantom's density set
     
     
-    image_set_info = Instance(ImageSetInfo)
-   
+    dicom_image_set_info = Instance(DicomImageSetInfo) #Input parameters for DICOM output
+    g4_image_set_info = Instance(G4ImageSetInfo)#Input parameters for Geant4 Geometry output
+    
+    
     export_property = Instance(ImageExportProperty)
    
-
-    dicom_worker = Instance(DicomExporter)
-#    geant4_worker = Instance()
+    style_flag  = Delegate( 'export_property' )
+    
+    dicom_worker = Instance( DicomExporter)
+    geant4_worker = Instance( G4GeometryExporter)
     
    
         
     def __init__(self,**traits):
         super(ImageSetExporter, self).__init__(**traits)
         
-        self.image_set_info = ImageSetInfo()
-   
+        self.dicom_image_set_info = DicomImageSetInfo()
+        self.g4_image_set_info = G4ImageSetInfo()
+        
+        self.g4_materials = []
+        
         self.export_property = ImageExportProperty()
         
+        self.dicom_worker =DicomExporter()
+        self.geant4_worker = G4GeometryExporter()
                        
         
     def do_dicom_export(self):
-        dicom_worker =DicomExporter()
+       
             
-        dicom_worker.image_set_info  = self.image_set_info
-        dicom_worker.export_property = self.export_property
-        dicom_worker.image_sets = self.image_sets
+        self.dicom_worker.dicom_image_set_info  = self.dicom_image_set_info
+        self.dicom_worker.export_property = self.export_property
+        self.dicom_worker.image_sets = self.image_sets
             
-        dicom_worker.do_job()
+        self.dicom_worker.do_job()
             
+    def do_g4_export(self):
+       
+        
+        self.geant4_worker.index_sets = self.index_sets 
+        self.geant4_worker.density_sets = self.density_sets
+      
+    
+        print "in the do_g4_export: ", self.geant4_worker.g4_materials 
+     
+        self.geant4_worker.g4_image_set_info = self.g4_image_set_info  
+        self.geant4_worker.export_property = self.export_property
+    
+        self.geant4_worker.do_job()
+        
+        
+
+        #G4GeometryExporter
         
    
     #********************************************************************
     #Do Export Job 
     def do_export_job(self):
-        if self.export_property.export_style == 'Dicom CTImage' or 'EcliseTPS-CTImage' :
-            print "Image Export Style:",  self.export_property.export_style
+        style =  self.export_property.export_style
+        
+        print "Image Export Style:", style
+        
+        if style == 'Dicom CTImage' or style == 'EcliseTPS-CTImage' :
+          
             self.do_dicom_export()
+        elif style == 'GEANT4 Geometry' :
+            self.do_g4_export()
             
+            
+          
 #        elif self.export_property.export_style == 'DicomCT-Xio 4.3.1' :
 #            self.do_dicom_export()
 #        
 #        elif self.export_property.export_style ==  'DicomCT-Xio 4.6.4' :
 #            self.do_dicom_export()
 #        
-#        elif  self.export_property.export_style == 'GEANT4 Geometry' :
-#            pass
-          
+
 
 
     space = VGroup(
@@ -105,9 +147,16 @@ class ImageSetExporter(HasTraits):
 
  
     view = View( 
-                 Item(name='image_set_info',
+                 Item(name='dicom_image_set_info',
                       style='custom',
+                      visible_when = 'style_flag == 0',
                       show_label = False),
+                      
+                 Item(name='g4_image_set_info',
+                      style='custom',
+                      visible_when = 'style_flag == 1',
+                      show_label = False),
+                        
                  space,
                  Item(name='export_property',
                       style='custom',
@@ -115,7 +164,7 @@ class ImageSetExporter(HasTraits):
                
                 title = 'Image Set Exporter',
                 height= 500,
-                width = 400,
+                width =600,
                 kind = 'livemodal',
                 buttons = [OKButton,CancelButton]
                 )

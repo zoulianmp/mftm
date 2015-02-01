@@ -28,7 +28,7 @@ from util import ensure_dir, get_slice_from_3d_image
 #import dicom
 import numpy as np
       
-from mphantom.api import message_box      
+from util import message_box      
       
 from dicom.dataset import Dataset, FileDataset
 from dicom.UID import  pydicom_root_UID, generate_uid
@@ -39,7 +39,7 @@ from vtk.util import vtkConstants
 
 from image_export_property import ImageExportProperty
 
-from image_set_info import ImageSetInfo
+from dicom_image_set_info import DicomImageSetInfo
 
 
 
@@ -52,7 +52,7 @@ class DicomExporter(HasTraits):
    
  
              
-    image_set_info = Instance(ImageSetInfo)   
+    dicom_image_set_info = Instance(DicomImageSetInfo)   
     export_property = Instance(ImageExportProperty)
     
     
@@ -530,7 +530,7 @@ class DicomExporter(HasTraits):
         if len(self.image_sets) == 1:
             
             self.image_3d = self.image_sets[0]
-            self.gen_dicom_files(dicoms_out_dir,self.image_3d,self.image_set_info,self.slice_dataset)
+            self.gen_dicom_files(dicoms_out_dir,self.image_3d,self.dicom_image_set_info,self.slice_dataset)
         
             print "**********Dicom CT Exported Successfully*****************************/n"
             
@@ -594,7 +594,7 @@ class DicomExporter(HasTraits):
 
 if __name__ == '__main__':
     
-    imginfo = ImageSetInfo()
+    imginfo = DicomImageSetInfo()
     imginfo.configure_traits()
     
    
@@ -625,7 +625,7 @@ if __name__ == '__main__':
     
     dicom_exporter.image_style ='template'
     
-    dicom_exporter.image_set_info = imginfo 
+    dicom_exporter.dicom_image_set_info = imginfo 
     
     dicom_exporter.image_sets = [image]
     

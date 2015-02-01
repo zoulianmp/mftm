@@ -6,7 +6,7 @@ Created on Wed Oct 26 10:03:36 2011
 @Oncology Department
 @Sichuan People's Hospital
 @Chengdu,Sichuan,China
-"""
+  """
 
 from traits.etsconfig.api import ETSConfig
 ETSConfig.toolkit = 'wx'

@@ -39,8 +39,10 @@ class Virtual_CT_Scanner(HasTraits):
     #The Image world coordinates is based on Unit: mm 
     raw_data =List(tvtk.ImageData) 
         
+    material_index_data = List(tvtk.ImageData) 
     
-    
+    material_density_data =  List(tvtk.ImageData)  
+   
     
     #A broker for dicom export
     image_exporter = Instance (ImageSetExporter)
@@ -82,6 +84,10 @@ class Virtual_CT_Scanner(HasTraits):
         self.scanning_paras = CT_Scanner_Parameters()
         self.image_exporter = ImageSetExporter()
         self.raw_data =[]
+        self.material_index_data = [] 
+        self.material_density_data =[]
+       
+    
         
        
 
@@ -184,73 +190,93 @@ class Virtual_CT_Scanner(HasTraits):
              
        
     #Generate the White Image data for mask the phantom model 
-    def _gen_image_data_by_numpy(self):
-        
-           params = self.scanning_paras       
-        
-                     
-           bounds = self.phantom.get_bounds()
-           
-           print "phantom.bounds", bounds
-        
-#           self.spacing_x = fixed_size[0] / self.slice_size[0]
-#           self.spacing_y = fixed_size[1] / self.slice_size[1]
-            
-           spacing_z = params.slice_thickness
-           
-         
-          # self.slice_num  = int(ceil((bounds[5] - bounds[4])/self.spacing_z))+1
-           params.slice_num  = int(ceil((bounds[5] - bounds[4])/spacing_z))
-           
-           params.center_x = (bounds[1] + bounds[0])/2.0
-           params.center_y = (bounds[3] + bounds[2])/2.0
-           params.center_z = (bounds[5] + bounds[4])/2.0
+    def _gen_image_data_by_numpy(self,defaultvalue=0.0,pixeltype = 0):
+         """
+         Phantom coordinates:
+               bounds = self.phantom.get_bounds(),get the phantom bound.
+               x,y bound can't break the Image bound.
+
+               z bound decide the image zmin, slice number.
                
-           
-           spacing = ( params.spacing_x, params.spacing_y, spacing_z)
-           
-           print "Spacing = ",spacing
-           
-           offset_x = (params.slice_size[0] * spacing[0])/2.0
-           offset_y = (params.slice_size[1] * spacing[1])/2.0
-           offset_z = (params.slice_num * spacing[2])/2.0
-          
-           origin_x = params.center_x  - offset_x
-           origin_y = params.center_y  - offset_y
-           origin_z = params.center_z  - offset_z
-           
-           image = tvtk.ImageData()
-           
-           dim= (params.slice_size[0],params.slice_size[1], params.slice_num )
-           
-           print "The VTK Image Dims:", dim
-           
-           origin = ( origin_x, origin_y, origin_z)
-           
-          
-           exten = (0,dim[0]-1,0,dim[1]-1,0,dim[2]-1)
-         
-           #the background HU Value of air 
-           bgvalue = self._get_air_hu_value()
-           
-         
-           #Initialize the volume value
-           import numpy as np
-           
-           scalars = np.ones(dim,dtype = np.int16) * bgvalue
-           
-         
-           #set image property
-           image.origin = origin
-           image.spacing = spacing
-           image.extent = exten
-           
-           image.scalar_type = vtkConstants.VTK_SHORT
-           image.point_data.scalars = scalars.ravel()
         
-           print "Initial Generate the image array,in the _gen_image_data_by_numpy(self): "
-           return image
-           
+        
+         Image Coordinates:
+            Image.origin place at（xmin，ymin，zmin），
+        
+         pixeltype = 0 , pixel type is  np.int16
+         pixeltype = 1 , pixel type is  np.float32
+        
+         """
+    
+         params = self.scanning_paras       
+    
+     
+         bounds = self.phantom.get_bounds()
+       
+         print "phantom.bounds", bounds
+    
+      
+         spacing_z = params.slice_thickness
+       
+     
+         # self.slice_num  = int(ceil((bounds[5] - bounds[4])/self.spacing_z))+1
+         params.slice_num  = int(ceil((bounds[5] - bounds[4])/spacing_z))
+       
+       
+         #The phantom center
+         params.center_x = (bounds[1] + bounds[0])/2.0
+         params.center_y = (bounds[3] + bounds[2])/2.0
+      
+         params.center_z = (bounds[5] + bounds[4])/2.0
+       
+       
+         #The Image Parameters
+         spacing = ( params.spacing_x, params.spacing_y, spacing_z)
+     
+         image_bounds = [-0.5* (params.slice_size[0]-1)*spacing[0], 0.5* (params.slice_size[0]-1)*spacing[0],
+       
+                         -0.5* (params.slice_size[1]-1)*spacing[1], 0.5* (params.slice_size[1]-1)*spacing[1],
+       
+                         -0.5* (params.slice_num-1)*spacing[2] + params.center_z, -0.5* (params.slice_num-1)*spacing[2] + params.center_z
+                        ]
+       
+         origin = (image_bounds[0],image_bounds[2],image_bounds[4])  
+       
+       
+       
+         image = tvtk.ImageData()
+       
+         dim= (params.slice_size[0],params.slice_size[1], params.slice_num )
+       
+         print "The VTK Image Dims:", dim
+      
+         exten = (0,dim[0]-1,0,dim[1]-1,0,dim[2]-1)
+     
+         #the background HU Value of air 
+         # bgvalue = self._get_air_hu_value()
+       
+     
+         #Initialize the volume value
+         import numpy as np
+         if pixeltype == 0:
+             scalars = np.ones(dim,dtype = np.int16) * defaultvalue
+             image.scalar_type = vtkConstants.VTK_SHORT
+             
+         elif pixeltype == 1:
+             scalars = np.ones(dim,dtype = np.float32) * defaultvalue
+             image.scalar_type = vtkConstants.VTK_FLOAT
+     
+         #set image property
+         image.origin = origin
+         image.spacing = spacing
+         image.extent = exten
+       
+        
+         image.point_data.scalars = scalars.ravel()
+    
+         print "Initial Generate the image array,in the _gen_image_data_by_numpy(self): "
+         return image
+       
            
        
     #get the air HU Value from selected scanner
@@ -296,6 +322,15 @@ class Virtual_CT_Scanner(HasTraits):
        
        
                 self.image_exporter.image_sets = self.raw_data 
+                
+                self.image_exporter.index_sets =  self.material_index_data # Phantom's index set
+                self.image_exporter.density_sets = self.material_density_data #Phantom's density set  
+             
+              
+                
+              #  print "The Phantom Materials: ", self.g4_materials
+                
+                
                 self.ready_for_export = True
 
 
@@ -377,48 +412,77 @@ class Virtual_CT_Scanner(HasTraits):
             print "The Phantom Don't Pass The Check."
             return
   
-        rawdata = self._gen_image_data_by_numpy()
+  
+        #Get the initial 3d Image data ,index data,density data  
+        init_huv = self._get_air_hu_value()
+        rawdata = self._gen_image_data_by_numpy(init_huv,pixeltype =0)
+        
+        init_index = 0
+        index_data = self._gen_image_data_by_numpy(init_index,pixeltype = 0)
+        
+        init_density = 0.1
+        density_data = self._gen_image_data_by_numpy(init_density,pixeltype = 1)
+        
+        
+        
+        
         
         #Do the real Scan for elements coordinate to priority of elements
         elements_list =  self.phantom.get_sorted_elements_by_priority()
         
         print "elements_list",elements_list
         
-        outimage = self._do_virtual_scan(rawdata,elements_list)
+        outdata_list = self._do_virtual_scan(rawdata,index_data,density_data,elements_list)
         
         
-        self.raw_data.append(outimage)
-        
-  
-
- 
-            
+        self.raw_data.append(outdata_list[0])
+        self.material_index_data.append(outdata_list[1])
+        self.material_density_data.append(outdata_list[2])
+    
+      
             
             
     #Do the real virtual scan job ,correspond to elements_list       
-    def _do_virtual_scan(self,rawdata,elements_list):
+    def _do_virtual_scan(self,rawdata,indexdata,densitydata,elements_list):
        
         
         in_image = rawdata  
-       
+        in_index = indexdata
+        in_density = densitydata
          
-        
+        #Do the HU Image set updated
         for item in elements_list:
             element = item[1]
-         
+          
             hu = self.scanning_paras.ed_hu_curve.get_hu_from_edensity(element.general.re_e_density)
             
-            print "element.name = ",element.name, hu
+            index = element.general.material_index
+            
+            material =  element.general.tissue_type
+            
+            density =  element.general.mass_density           
+            
+#            mat_pair = (index,material)
+#            
+#            self.g4_materials.append(mat_pair)
+            
+            print "element.name = ",element.name, hu, index, material, density 
             
             polydata = element.geometry.transformed_poly
                
           
             tem_image = self._polydata_to_image(in_image,polydata,hu)
+            tem_index = self._polydata_to_image(in_index,polydata,index)
+            tem_density =  self._polydata_to_image(in_density,polydata,density)
+                       
+            
             
             in_image = tem_image
-        
+            in_index = tem_index
+            in_density = tem_density
+         
       
-        return in_image
+        return [in_image,in_index,in_density]
       
       
        

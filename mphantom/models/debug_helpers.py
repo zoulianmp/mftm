@@ -266,30 +266,49 @@ def image_volume_slice_view(inimage):
 ##################################
 
 #Generate the White Image data for mask the phantom model 
-def gen_image_data_by_numpy( bgvalue = -600):
- 
-       bounds = [-50,50,-50,50,-30,30]
+def gen_g4geometry_by_numpy( bgvalue = -600):
        
-       width = bounds[1] - bounds[0]
-       lenth = bounds[3] - bounds[2]
-       heigh = bounds[5] - bounds[4]
+       nvoxles_x = 5
+       nvoxles_y = 4
+       nvoxles_z = 3     
        
-       spacing_x = 1
-       spacing_y = 1
-       spacing_z = 3
+       spacing_x = 1.0
+       spacing_y = 1.0
+       spacing_z = 3.0
        
-       size_x = width/spacing_x
-       size_y = lenth/spacing_y 
-       size_z  = heigh/spacing_z
+       bounds = [-0.5* (nvoxles_x-1)*spacing_x, 0.5* (nvoxles_x-1)*spacing_x,
+                   
+                   -0.5* (nvoxles_y-1)*spacing_y, 0.5* (nvoxles_y-1)*spacing_y,
+                   
+                   -0.5* (nvoxles_z-1)*spacing_z, 0.5* (nvoxles_z-1)*spacing_z,
+       
+                   ]
+       
+       origin = (bounds[0],bounds[2],bounds[4])  
+       
+       
+       print "manual caculated bounds_x : ", bounds
+       
+     
+     
+       size_x = nvoxles_x
+       size_y = nvoxles_y
+       size_z  = nvoxles_z
                     
        spacing = ( spacing_x, spacing_y,spacing_z)
        
        image = tvtk.ImageData()
        
-       dim= (size_x ,size_y,size_z )
+       dim= (size_z ,size_y, size_x) #in numpy (z,y,x)
        
-       origin = (bounds[0],bounds[2],bounds[4])     
-       exten = (0,dim[0]-1,0,dim[1]-1,0,dim[2]-1)
+       origin = (bounds[0],bounds[2],bounds[4])  
+       
+   #    origin = (bounds[0]+(spacing_x/2.0),bounds[2]+(spacing_y/2.0), \
+    #             bounds[4]+(spacing_z/2.0))  
+       
+       
+       exten = (0,dim[2]-1,0,dim[1]-1,0,dim[0]-1)   # x,y,z in vtk images
+   #    exten = (1,dim[0] ,1,dim[1],1,dim[2] )
      
          
        #Initialize the volume value
@@ -297,8 +316,14 @@ def gen_image_data_by_numpy( bgvalue = -600):
        
        scalars = np.ones(dim,dtype = np.int16) * bgvalue
        
-       scalars[:,10:90,10:90] = 500
-       #scalars[:,16:24,16:24] = 800
+       scalars[0,0,1:4] = 6
+       scalars[0,2,1:4] = 3
+       scalars[1,1,1:4] = 8
+       scalars[2,1,1] = 7
+       scalars[2,2,2] = 7
+       scalars[2,3,3] = 7
+       
+       print scalars
       
        
        #set image property
@@ -311,6 +336,74 @@ def gen_image_data_by_numpy( bgvalue = -600):
     
        return image
    
+   
+#Generate the White Image data for mask the phantom model 
+def gen_image_data_by_numpy( bgvalue = -600):
+ 
+       
+       nvoxles_x = 5
+       nvoxles_y = 5
+       nvoxles_z = 5      
+       
+       spacing_x = 1.0
+       spacing_y = 1.0
+       spacing_z = 3.0
+       
+       bounds = [-0.5* (nvoxles_x-1)*spacing_x, 0.5* (nvoxles_x-1)*spacing_x,
+                   
+                   -0.5* (nvoxles_y-1)*spacing_y, 0.5* (nvoxles_y-1)*spacing_y,
+                   
+                   -0.5* (nvoxles_z-1)*spacing_z, 0.5* (nvoxles_z-1)*spacing_z,
+       
+                   ]
+       
+       print "manual caculated bounds_x : ", bounds
+       
+     
+     
+       size_x = nvoxles_x
+       size_y = nvoxles_y
+       size_z  = nvoxles_z
+                    
+       spacing = ( spacing_x, spacing_y,spacing_z)
+       
+       image = tvtk.ImageData()
+       
+       dim= (size_x ,size_y,size_z )
+       
+       origin = (bounds[0],bounds[2],bounds[4])  
+       
+   #    origin = (bounds[0]+(spacing_x/2.0),bounds[2]+(spacing_y/2.0), \
+    #             bounds[4]+(spacing_z/2.0))  
+       
+       
+       exten = (0,dim[0]-1,0,dim[1]-1,0,dim[2]-1)
+   #    exten = (1,dim[0] ,1,dim[1],1,dim[2] )
+     
+         
+       #Initialize the volume value
+       import numpy as np
+       
+       scalars = np.ones(dim,dtype = np.int16) * bgvalue
+       
+       scalars[:,10:90,10:90] = 500
+       scalars[:,16:24,16:24] = 800
+      
+       
+       #set image property
+       image.origin = origin
+       image.spacing = spacing
+       image.extent = exten
+       
+       image.scalar_type = vtkConstants.VTK_SHORT
+       image.point_data.scalars = scalars.ravel()
+    
+       return image
+   
+   
+
+
+
    
 
 #Mask the polydata to volume image with vaiue HU     
@@ -357,23 +450,306 @@ def polydata_to_image(image):
         
 #################################################################################
 
-if __name__ == '__main__':
-    
-    image = gen_image_data_by_numpy()
-    
-    #print "Volume Render the Image :"
-    #image_volume_render(image)
 
-    #print "Slice Show the Image: "
-    #image_volume_slice_view(image)
+###################################
+# Useage Examples
+"""
+   from debug_helpers import resample_image         
+   resample_image(image)
+"""
+##################################
+
+def print_image_info(image):
     
-    outimage = polydata_to_image(image)
+    image.update()
     
-    print "After Mask Slice Show"
-    image_volume_slice_view(outimage)
+    image.compute_bounds()
+     
     
-    from pyface.api import MessageDialog
-    dialog = MessageDialog(message="message", title="title", severity='error')
-    dialog.open()
+    print "###########################################"
+    print "#########Begin of Print Image Infor #######"
+
+       #set image property
+
+    print "image.origin = ", image.origin
+    print "image.spacing = ", image.spacing 
+    print "image.extent = ", image.extent   #dimenstion 
+    print "image.whole_extent = ", image.whole_extent       
+    print "image.data_dimension = ", image.data_dimension
+    print "image.center = ",image.center
+    print "image.bounds = ", image.bounds 
+
+   
+    print "#########End of Print Image Infor #######"
+    print "###########################################"
+
+
+
+
+
+
+
+###################################
+# Useage Examples
+"""
+   from debug_helpers import resample_image         
+   resample_image(image)
+"""
+##################################
+
+
+
+
+def resample_image(image,dealflag = 0 ):
+    
+    resampler = tvtk.ImageResample()
+    
+    resampler.input = image
+    
+     
+    x_factor = 2
+    y_factor = 2
+    z_factor = 2
+    
+        
+    resampler.interpolation_mode = 'cubic' 
+    resampler.set_axis_magnification_factor(0, x_factor)
+    
+    resampler.set_axis_magnification_factor(1, y_factor)
+    resampler.set_axis_magnification_factor(2, z_factor)
+    
+    resampler.update()
+    
+#    resampler.output.origin = new_origin
+    
+    return resampler.output
+    
+    
+    
+    
+def image_cast_for_visualization(image):
+
+    castor = tvtk.ImageCast()
+    castor.input = image
+    
+    castor.set_output_scalar_type_to_unsigned_char()
+    castor.update()
+    
+    return castor.output
+    
+    
+    
+
+def numpy_array_test():
+     import numpy as np
+     
+     size_x = 5
+     size_y = 4
+     size_z = 3
+     
+     dim= (size_z ,size_y, size_x)  #index style
+       
+     scalars = np.ones(dim,dtype = np.int16) 
+     
+     print scalars
+     
+     scalars[1,1,:] = 45
      
    
+
+     print scalars
+     
+     scalars1 = np.ones(dim,dtype = np.int16)*90 
+     
+     import csv
+     
+     
+     
+     import csv
+    
+     
+     mates = ["sggsdg","sagjfwlkejoi", "asdgagag"]
+     
+     mas_dic = ["asg",5545,"weew",809808]
+     
+     
+     
+     import csv
+
+
+    
+     
+     fname = "e:/test_numpy.txt"
+     with open(fname, 'w') as csvfile:
+         
+        writer = csv.writer(csvfile,delimiter = ' ', lineterminator='\n')
+        
+        writer.writerow(mates)
+        writer.writerow(mas_dic)
+        
+        
+              
+        scalars.tofile(csvfile, sep=" ", format="%f") 
+        scalars1.tofile(csvfile, sep=" ", format="%f") 
+     csvfile.close()
+
+
+def save_list_to_file_test():
+      
+     
+     import csv
+
+     res = ["sggsdg","sagjfwlkejoi", "asdgagag"]
+     csvfile = "e:/test_listout.txt"
+
+     #Assuming res is a flat list
+     with open(csvfile, "w") as output:
+        writer = csv.writer(output,delimiter = ' ', lineterminator='\n')
+        
+        writer.writerow(res)
+        writer.writerows(res)
+        
+      #  mas_dic = {"asg":5545,"weew":809808}
+        
+       # writer.writerow(mas_dic)
+     
+        for val in res:
+            writer.writerow([val])    
+
+    #Assuming res is a list of lists
+    # with open(csvfile, "w") as output:
+    #    writer = csv.writer(output, lineterminator='\n')
+    #    writer.writerows(res)
+        
+        
+       
+    
+    
+def extract_image_voi(image):
+    
+    extractor =tvtk.ExtractVOI()
+    
+    extractor.input = image
+    
+    extractor.voi = (30, 160, 30, 160, 3, 6)
+     
+     
+    extractor.update ()
+    return extractor.output
+    
+    
+#     
+#     extract = vtk.vtkExtractVOI()
+#     151 extract.SetVOI(31, 31, 0, 63, 0, 92)
+#     152 extract.SetSampleRate(1, 1, 1)
+#     153 extract.SetInputConnection(shifter.GetOutputPort())
+#     154 extract.ReleaseDataFlagOff()
+#     155 #
+#     156 
+
+
+
+
+
+
+
+
+if __name__ == '__main__':
+    
+    
+   #  save_list_to_file_test()
+    # numpy_array_test()
+    
+#    
+     image = gen_g4geometry_by_numpy()
+     
+     
+     import numpy as np
+
+     vtk_array = image.point_data.scalars
+     
+   
+     #np(z,y,x)
+     shape = (3,4,5)
+            
+     array_pointer =  vtk_array.to_array()
+
+      
+            
+     result = np.frombuffer(array_pointer, dtype=np.int16)
+     
+     print "Pre reshaped:"
+     print result
+     
+     result.shape = shape 
+     print "After reshaped:"
+     print result
+     
+     with open("e:/test.nump.txt", 'w') as csvfile:
+         
+         result.tofile(csvfile, sep=" ", format="%i")
+
+    # Get the data via the buffer interface
+#  
+#    result = numpy.frombuffer(vtk_array, dtype=dtype)
+#    if shape[1] == 1:
+#        shape = (shape[0], )
+#    result.shape = shape
+#    return result 
+#     
+#     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+#    print "The raw image:"
+#    print_image_info(image)
+#    
+#    resam_image = resample_image(image)
+#    
+#    print "The resampledimage:"
+#    
+#    print_image_info(resam_image)
+#    
+#    voi = extract_image_voi(resam_image)
+#    
+#    
+#    print "The voi:"
+#    
+#    print_image_info(voi)
+#        
+#        
+#        
+#    dis_voi = image_cast_for_visualization(voi)
+#    
+#   # print "Volume Render the Image :"
+#  #  image_volume_render(dis_voi)
+#    
+#    dis_resampl_image = image_cast_for_visualization(image)
+#    
+#
+#    print "Slice Show the Image: "
+#    image_volume_slice_view(dis_resampl_image)
+#    
+#    
+#    image_volume_slice_view(image)
+#    
+##    outimage = polydata_to_image(image)
+#    
+#    print "After Mask Slice Show"
+#    image_volume_slice_view(outimage)
+#    
+#    from pyface.api import MessageDialog
+#    dialog = MessageDialog(message="message", title="title", severity='error')
+#    dialog.open()
+#     
+#   

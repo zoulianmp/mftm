@@ -39,7 +39,7 @@ from traitsui.menu import OKButton,  CancelButton
 from vtk.util import vtkConstants
 
     
-class ImageSetInfo(HasTraits):
+class DicomImageSetInfo(HasTraits):
    
    
     
@@ -92,7 +92,7 @@ class ImageSetInfo(HasTraits):
     time_stamp_str = Str()
          
     def __init__(self,**traits):
-        super(ImageSetInfo, self).__init__(**traits)
+        super(DicomImageSetInfo, self).__init__(**traits)
         
         self.init_time_related_variables()
      
@@ -225,7 +225,7 @@ class ImageSetInfo(HasTraits):
 if __name__ == '__main__':
     
    
-   imageinfo = ImageSetInfo()
+   imageinfo = DicomImageSetInfo()
    print  imageinfo.patient_birth_time
    print  imageinfo.patient_birth_time.strftime("%H%M%S.%f")
    imageinfo.configure_traits()
