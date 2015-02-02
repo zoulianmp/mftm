@@ -1,0 +1,8 @@
+MaterialName,RelativeEDensity,R,G,B,Density
+G4_AIR,0.001,0.1,0.5,0.3,0.1
+G4_WATER,1.000,0.0000,0.0000,1.0000,1.0
+G4_BORON_CARBIDE,0.190,0.3,0.5,0.3,1.31 
+G4_LUNG_ICRP,0.489,0.1,0.5,0.3,0.5 
+G4_ADIPOSE_TISSUE_ICRP,0.926,0.2,0.5,0.3,0.96                                                     
+G4_BRAIN_ICRP,0.976,0.4,0.5,0.3,0.99                           
+
